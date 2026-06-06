@@ -1,6 +1,7 @@
 import type { Dispatch,  SetStateAction } from "react";
 
 export interface DiaryEntry {
+  id?: string; 
   mood: string;
   date: string;
   title: string;
@@ -26,6 +27,7 @@ export interface SpreadProps {
   setImgFile: Dispatch<SetStateAction<string>>;
   onSave: () => void;
   onCancel: () => void;
+  onDelete: () => void;
 }
 
 export interface FlipOverlayProps {

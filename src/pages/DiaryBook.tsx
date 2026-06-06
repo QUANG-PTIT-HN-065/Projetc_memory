@@ -4,6 +4,9 @@ import Spread from "./components/Diary/Spread";
 import FlipOverlay from "./components/Diary/FlipOverlay";
 import NavBtn from "./components/Diary/NavBtn";
 import ActionBtn from "./components/Diary/ActionBtn";
+import DeleteConfirmPopup from "./components/Diary/DeleteConfirmPopup";
+import { dataConnect } from "../firebase";
+import { createTodoItem, updateTodoItem, deleteTodoItem, listTodoItems, PriorityLevel } from "../dataconnect-generated";
 
 /* ─── SUNBURST BACKGROUND DOTS ─── */
 const SUN_DOTS = Array.from({ length: 12 }, (_, i) => ({
@@ -18,6 +21,7 @@ const SUN_DOTS = Array.from({ length: 12 }, (_, i) => ({
 /* ─── DATA ─────────────────────────────────────────────── */
 const ENTRIES: DiaryEntry[] = [
   {
+    id: "1",
     date: "Thứ Hai · 02 tháng 6, 2025",
     title: "Buổi sáng bình yên",
     mood: "🌻",
@@ -27,6 +31,7 @@ const ENTRIES: DiaryEntry[] = [
     caption: "Bình minh trên đỉnh núi",
   },
   {
+    id: "2",
     date: "Thứ Ba · 03 tháng 6, 2025",
     title: "Cuộc gặp gỡ tình cờ",
     mood: "☀️",
@@ -36,6 +41,7 @@ const ENTRIES: DiaryEntry[] = [
     caption: "Buổi sáng cà phê",
   },
   {
+    id: "3",
     date: "Thứ Tư · 04 tháng 6, 2025",
     title: "Mưa và những suy nghĩ",
     mood: "🌼",
@@ -45,6 +51,7 @@ const ENTRIES: DiaryEntry[] = [
     caption: "Mưa bên cửa sổ",
   },
   {
+    id: "4",
     date: "Thứ Năm · 05 tháng 6, 2025",
     title: "Học làm bánh",
     mood: "🍋",
@@ -54,15 +61,25 @@ const ENTRIES: DiaryEntry[] = [
     caption: "Buổi chiều làm bánh",
   },
   {
+    id: "5",
     date: "Thứ Sáu · 06 tháng 6, 2025",
     title: "Hoàng hôn công viên",
     mood: "🌞",
     content:
       "Đi dạo một mình lúc chiều tối. Công viên lúc này thưa người — chỉ có mấy ông bà già ngồi hóng mát, vài đứa trẻ còn nán lại trước khi về ăn cơm.\n\nTôi ngồi trên chiếc ghế đá quen thuộc, nhìn bầu trời chuyển từ cam sang tím. Không nghĩ gì. Đôi khi, không nghĩ gì cũng là một điều xa xỉ.",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80",
+    image: "https://marketplace.canva.com/MADFUnHu3qw/1/thumbnail_large/canva-sunset-MADFUnHu3qw.jpg",
     caption: "Hoàng hôn mùa hè",
   },
 ];
+const emptyEntry: DiaryEntry = {
+  id: "",
+  date: "",
+  title: "Chưa có trang nào",
+  mood: "📖",
+  content: "Hãy tạo trang nhật ký đầu tiên của bạn.",
+  image: "",
+  caption: "",
+};
 
 /* ─── MAIN APP ──────────────────────────────────────────── */
 export default function DiaryBook() {
@@ -71,20 +88,78 @@ export default function DiaryBook() {
   const [flipDir, setFlipDir] = useState<"forward" | "back" | null>(null);
   const [flipping, setFlipping] = useState(false);
   const [addMode, setAddMode] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [entries, setEntries] = useState<DiaryEntry[]>(ENTRIES);
   const [newEntry, setNewEntry] = useState<NewDiaryEntry>({ title: "", content: "", mood: "🌻", caption: "" });
   const [imgFile, setImgFile] = useState<string>("");
+  const [dbStatus, setDbStatus] = useState<string>("");
   const tRef = useRef<number[]>([]);
   const at = (fn: () => void, ms: number) => {
     const id = window.setTimeout(fn, ms);
     tRef.current.push(id);
   };
-  useEffect(
-    () => () => {
-      tRef.current.forEach(clearTimeout);
-    },
-    [],
-  );
+
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  const deleteEntry = async () => {
+    const current = entries[page];
+    if (current?.id) {
+      try {
+        await deleteTodoItem(dataConnect, { id: { id: current.id } });
+        setDbStatus("Xóa ghi chú trên server thành công.");
+      } catch (error) {
+        console.error("Xóa remote thất bại:", error);
+        setDbStatus("Xóa server thất bại, vẫn xoá local.");
+      }
+    }
+
+    const updated = entries.filter((_, i) => i !== page);
+    setEntries(updated);
+    setPage(Math.min(page, updated.length - 1));
+    setShowDeleteConfirm(false);
+  };
+
+  const mapTodoItemToEntry = (item: { id: string; text: string; priority?: string | null }) => {
+    const [titleLine, ...restContent] = item.text.split("\n\n");
+    const priorityMood = item.priority === "high" ? "🔥" : item.priority === "low" ? "🌿" : "🌼";
+
+    return {
+      id: item.id,
+      date: "✨ Lưu trên Cloud",
+      title: titleLine || "Ghi chú mới",
+      mood: priorityMood,
+      content: restContent.length > 0 ? restContent.join("\n\n") : item.text,
+      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80",
+      caption: item.priority ? `Ưu tiên: ${item.priority}` : "Từ DataConnect",
+    } as DiaryEntry;
+  };
+
+  useEffect(() => {
+    const currentTimeouts = [...tRef.current];
+
+    const loadRemoteEntries = async () => {
+      try {
+        const result = await listTodoItems(dataConnect);
+        const remote = result.data?.todoItems?.map(mapTodoItemToEntry) ?? [];
+        setEntries((current) => {
+          const existingIds = new Set(current.filter((entry) => entry.id).map((entry) => entry.id));
+          const newRemote = remote.filter((item) => item.id && !existingIds.has(item.id));
+          return [...current, ...newRemote];
+        });
+        setDbStatus("Đã tải ghi chú từ DataConnect.");
+      } catch (error) {
+        console.error("Không tải được ghi chú DataConnect:", error);
+        setDbStatus("Không kết nối được DataConnect.");
+      }
+    };
+
+    loadRemoteEntries();
+
+    return () => {
+      currentTimeouts.forEach(clearTimeout);
+    };
+  }, []);
 
   const openBook = () => {
     if (stage !== "closed") return;
@@ -94,6 +169,8 @@ export default function DiaryBook() {
   const closeBook = () => {
     if (stage !== "open") return;
     setAddMode(false);
+    setIsEditMode(false);
+    setEditingIndex(null);
     setStage("closing");
     at(() => setStage("closed"), 950);
   };
@@ -111,12 +188,12 @@ export default function DiaryBook() {
     }, 750);
   };
 
-  const saveEntry = () => {
+  const saveEntry = async () => {
     if (!newEntry.title || !newEntry.content) return;
     const days = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
     const d = new Date();
     const dateStr = `${days[d.getDay()]} · ${d.getDate()} tháng ${d.getMonth() + 1}, ${d.getFullYear()}`;
-    const e = {
+    const entryData = {
       date: dateStr,
       title: newEntry.title,
       mood: newEntry.mood,
@@ -124,17 +201,70 @@ export default function DiaryBook() {
       image: imgFile || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80",
       caption: newEntry.caption || "Kỷ niệm",
     };
-    const updated = [...entries, e];
+
+    if (isEditMode && editingIndex !== null) {
+      const existing = entries[editingIndex];
+      const updated = entries.map((item, idx) => (idx === editingIndex ? { ...item, ...entryData } : item));
+      setEntries(updated);
+      setNewEntry({ title: "", content: "", mood: "🌻", caption: "" });
+      setImgFile("");
+      setAddMode(false);
+      setIsEditMode(false);
+      setEditingIndex(null);
+      setPage(editingIndex);
+
+      if (existing?.id) {
+        try {
+          await updateTodoItem(dataConnect, {
+            id: { id: existing.id },
+            text: `${entryData.title}\n\n${entryData.content}`,
+            completed: false,
+            priority: PriorityLevel.medium,
+          });
+          setDbStatus("Cập nhật ghi chú trên server thành công.");
+        } catch (error) {
+          console.error("Cập nhật remote thất bại:", error);
+          setDbStatus("Cập nhật server thất bại.");
+        }
+      }
+
+      return;
+    }
+
+    const remoteText = `${entryData.title}\n\n${entryData.content}`;
+    const updated = [...entries, entryData];
     setEntries(updated);
     setNewEntry({ title: "", content: "", mood: "🌻", caption: "" });
     setImgFile("");
     setAddMode(false);
     setPage(updated.length - 1);
+
+    try {
+      const result = await createTodoItem(dataConnect, {
+        text: remoteText,
+        completed: false,
+        priority: PriorityLevel.medium,
+      });
+      const remoteId = result.data?.todoItem_insert?.id;
+      if (remoteId) {
+        setEntries((current) => {
+          const copy = [...current];
+          copy[copy.length - 1] = { ...copy[copy.length - 1], id: remoteId };
+          return copy;
+        });
+        setDbStatus("Đã lưu ghi chú lên DataConnect.");
+      }
+    } catch (error) {
+      console.error("Tạo remote thất bại:", error);
+      setDbStatus("Không tạo được ghi chú trên server.");
+    }
   };
 
-  const cur = entries[Math.min(page, entries.length - 1)];
-  const next = entries[Math.min(page + 1, entries.length - 1)];
-  const prev = entries[Math.max(page - 1, 0)];
+  const cur = entries.length > 0 ? entries[Math.min(page, entries.length - 1)] : emptyEntry;
+
+  const next = entries.length > 0 ? entries[Math.min(page + 1, entries.length - 1)] : emptyEntry;
+
+  const prev = entries.length > 0 ? entries[Math.max(page - 1, 0)] : emptyEntry;
 
   /* ── open/close 3D transform ── */
   const bookOpen = stage === "open" || stage === "closing";
@@ -181,9 +311,12 @@ export default function DiaryBook() {
           ✦ Nhật Ký Mùa Hè ✦
         </h1>
         {stage === "open" && (
-          <p style={{ color: "#c8a020", fontSize: "0.72rem", marginTop: "0.3rem", letterSpacing: "0.1em" }}>
-            Trang {page + 1} / {entries.length}
-          </p>
+          <>
+            <p style={{ color: "#c8a020", fontSize: "0.72rem", marginTop: "0.3rem", letterSpacing: "0.1em" }}>
+              Trang {page + 1} / {entries.length}
+            </p>
+            {dbStatus && <p style={{ color: "#987200", fontSize: "0.72rem", marginTop: "0.3rem", letterSpacing: "0.08em" }}>{dbStatus}</p>}
+          </>
         )}
       </div>
 
@@ -304,7 +437,12 @@ export default function DiaryBook() {
                 imgFile={imgFile}
                 setImgFile={setImgFile}
                 onSave={saveEntry}
-                onCancel={() => setAddMode(false)}
+                onCancel={() => {
+                  setAddMode(false);
+                  setIsEditMode(false);
+                  setEditingIndex(null);
+                }}
+                onDelete={() => setShowDeleteConfirm(true)}
               />
             </div>
 
@@ -346,6 +484,23 @@ export default function DiaryBook() {
       {/* ── ACTIONS ── */}
       <div style={{ display: "flex", gap: "0.75rem", marginTop: "1.2rem", zIndex: 2 }}>
         {stage === "open" && !addMode && <ActionBtn onClick={() => setAddMode(true)} label="✦ Thêm trang mới" primary />}
+        {stage === "open" && !addMode && (
+          <ActionBtn
+            onClick={() => {
+              setIsEditMode(true);
+              setEditingIndex(page);
+              setNewEntry({
+                title: cur.title,
+                content: cur.content,
+                mood: cur.mood,
+                caption: cur.caption,
+              });
+              setImgFile(cur.image);
+              setAddMode(true);
+            }}
+            label="✎ Sửa trang hiện tại"
+          />
+        )}
         {stage === "open" && <ActionBtn onClick={closeBook} label="Đóng sách" />}
         {stage === "closed" && <ActionBtn onClick={openBook} label="✦ Mở sách" primary />}
       </div>
@@ -385,6 +540,8 @@ export default function DiaryBook() {
          * { box-sizing: border-box; }
         `}
       </style>
+
+      {showDeleteConfirm && <DeleteConfirmPopup entry={cur} onConfirm={deleteEntry} onCancel={() => setShowDeleteConfirm(false)} />}
     </div>
   );
 }

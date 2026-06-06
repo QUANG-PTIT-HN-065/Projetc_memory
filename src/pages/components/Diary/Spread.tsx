@@ -1,12 +1,14 @@
 import Lines from "./Lines";
 import PageNum from "./PageNum";
 import Corner from "./Corner";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import type { SpreadProps } from "../../../Interfaces/DiaryBook";
+import { uploadImage } from "../../../utils/uploadImage";
 /* ─── PAGE COMPONENT (one spread = left+right) ──────────── */
-export default function Spread({ entry, pageNum, addMode, newEntry, setNewEntry, imgFile, setImgFile, onSave, onCancel }: SpreadProps) {
+export default function Spread({ entry, pageNum, addMode, newEntry, setNewEntry, imgFile, setImgFile, onSave, onCancel,onDelete }: SpreadProps) {
   const fileRef = useRef<HTMLInputElement>(null);
   const MOODS = ["🌻", "☀️", "🌼", "🍋", "🌞", "🌊", "🍉", "🦋", "🌈", "🎐", "🍦", "🌺"];
+  const [uploading, setUploading] = useState(false);
 
   /* shared page paper style */
   const paperBase: React.CSSProperties = {
@@ -49,7 +51,7 @@ export default function Spread({ entry, pageNum, addMode, newEntry, setNewEntry,
               <img
                 src={entry.image}
                 alt={entry.caption}
-                style={{ flex: 1, width: "100%", objectFit: "cover", display: "block", minHeight: 0 }}
+                style={{ flex: 1, width: "100%", objectFit: "contain", display: "block", minHeight: 0 }}
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80";
                 }}
@@ -86,7 +88,25 @@ export default function Spread({ entry, pageNum, addMode, newEntry, setNewEntry,
               }}
             >
               {imgFile ? (
-                <img src={imgFile} style={{ width: "100%", height: "100%", objectFit: "cover" }} alt="preview" />
+                <div style={{ position: "relative", width: "100%", height: "100%" }}>
+                  <img src={imgFile} style={{ width: "100%", height: "100%", objectFit: "contain", opacity: uploading ? 0.5 : 1, transition: "opacity 0.3s" }} alt="preview" />
+                  {uploading && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "0.4rem",
+                      }}
+                    >
+                      <span style={{ fontSize: "1.4rem", animation: "float 1s ease-in-out infinite alternate" }}>☁️</span>
+                      <span style={{ fontSize: "0.65rem", color: "#c8a00a", fontStyle: "italic" }}>Đang tải lên...</span>
+                    </div>
+                  )}
+                </div>
               ) : (
                 <>
                   <span style={{ fontSize: "2rem", opacity: 0.4 }}>📷</span>
@@ -99,12 +119,24 @@ export default function Spread({ entry, pageNum, addMode, newEntry, setNewEntry,
               type="file"
               accept="image/*"
               style={{ display: "none" }}
-              onChange={(e) => {
+              onChange={async (e) => {
                 const f = e.target.files?.[0];
-                if (f) {
-                  const r = new FileReader();
-                  r.onload = (ev) => setImgFile(ev.target?.result as string);
-                  r.readAsDataURL(f);
+                if (!f) return;
+
+                // Preview ngay bằng base64
+                const reader = new FileReader();
+                reader.onload = (ev) => setImgFile(ev.target?.result as string);
+                reader.readAsDataURL(f);
+
+                // Upload lên Cloudinary
+                try {
+                  setUploading(true);
+                  const url = await uploadImage(f);
+                  setImgFile(url); // ghi đè bằng URL thật
+                } catch {
+                  alert("Upload ảnh thất bại, vui lòng thử lại.");
+                } finally {
+                  setUploading(false);
                 }
               }}
             />
@@ -147,6 +179,7 @@ export default function Spread({ entry, pageNum, addMode, newEntry, setNewEntry,
         {/* corner fold */}
         <div style={{ position: "absolute", top: 0, right: 0, borderLeft: "28px solid transparent", borderTop: "28px solid rgba(255,214,0,0.6)", zIndex: 3 }} />
 
+        
         {!addMode ? (
           <div style={{ padding: "1.4rem 1.8rem 1.8rem 3rem", height: "100%", boxSizing: "border-box", display: "flex", flexDirection: "column", position: "relative", zIndex: 1 }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.15rem" }}>
@@ -173,7 +206,30 @@ export default function Spread({ entry, pageNum, addMode, newEntry, setNewEntry,
                 </p>
               ))}
             </div>
-            <div style={{ textAlign: "right", fontStyle: "italic", color: "#d4a000", fontSize: "0.8rem", marginTop: "auto" }}>✦</div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "auto" }}>
+              <div /> {/* spacer */}
+              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                <button
+                  onClick={onDelete}
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                    fontSize: "0.7rem",
+                    color: "rgba(180,120,0,0.35)",
+                    fontStyle: "italic",
+                    fontFamily: "inherit",
+                    padding: 0,
+                    transition: "color 0.2s",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(200,60,0,0.55)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(180,120,0,0.35)")}
+                >
+                  ✕ xoá
+                </button>
+                <span style={{ fontStyle: "italic", color: "#d4a000", fontSize: "0.8rem" }}>✦</span>
+              </div>
+            </div>
             <PageNum n={pageNum * 2} />
           </div>
         ) : (
