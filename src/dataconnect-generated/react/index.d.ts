@@ -1,6 +1,6 @@
 import { CreateTodoItemData, CreateTodoItemVariables, UpdateTodoItemData, UpdateTodoItemVariables, DeleteTodoItemData, DeleteTodoItemVariables, ToggleTodoItemCompletedData, ToggleTodoItemCompletedVariables, ListTodoItemsData, GetTodoItemData, GetTodoItemVariables, ListTodoItemsByStatusData, ListTodoItemsByStatusVariables, ListTodoItemsByPriorityData, ListTodoItemsByPriorityVariables } from '../';
 import { UseDataConnectQueryResult, useDataConnectQueryOptions, UseDataConnectMutationResult, useDataConnectMutationOptions} from '@tanstack-query-firebase/react/data-connect';
-import { UseQueryResult, UseMutationResult} from '@tanstack/react-query';
+// import { UseQueryResult, UseMutationResult} from '@tanstack/react-query';
 import { DataConnect } from 'firebase/data-connect';
 import { FirebaseError } from 'firebase/app';
 
