@@ -1,0 +1,94 @@
+# Lấy danh sách tất cả TodoItem, sắp xếp theo deadline
+query ListTodoItems @auth(level: PUBLIC) {
+  todoItems(orderBy: [{ deadline: ASC }]) {
+    id
+    text
+    completed
+    priority
+    deadline
+  }
+}
+
+# Lấy chi tiết một TodoItem theo ID
+query GetTodoItem($id: TodoItem_Key!) @auth(level: PUBLIC) {
+  todoItem(key: $id) {
+    id
+    text
+    completed
+    priority
+    deadline
+  }
+}
+
+# Lọc TodoItem theo trạng thái hoàn thành
+query ListTodoItemsByStatus($completed: Boolean!) @auth(level: PUBLIC) {
+  todoItems(
+    where: { completed: { eq: $completed } }
+    orderBy: [{ deadline: ASC }]
+  ) {
+    id
+    text
+    completed
+    priority
+    deadline
+  }
+}
+
+# Lọc TodoItem theo mức độ ưu tiên
+query ListTodoItemsByPriority($priority: PriorityLevel!) @auth(level: PUBLIC) {
+  todoItems(
+    where: { priority: { eq: $priority } }
+    orderBy: [{ deadline: ASC }]
+  ) {
+    id
+    text
+    completed
+    priority
+    deadline
+  }
+}
+
+# Lấy danh sách tất cả DiaryEntry, sắp xếp theo ngày tạo
+query ListDiaryEntries @auth(level: PUBLIC) {
+  diaryEntries(orderBy: [{ createdAt: DESC }]) {
+    id
+    title
+    content
+    mood
+    image
+    caption
+    createdAt
+    updatedAt
+  }
+}
+
+# Lấy chi tiết một DiaryEntry theo ID
+query GetDiaryEntry($id: DiaryEntry_Key!) @auth(level: PUBLIC) {
+  diaryEntry(key: $id) {
+    id
+    title
+    content
+    mood
+    image
+    caption
+    createdAt
+    updatedAt
+  }
+}
+
+# Tìm DiaryEntry theo tiêu đề
+query SearchDiaryEntriesByTitle($title: String!) @auth(level: PUBLIC) {
+  diaryEntries(
+    where: { title: { contains: $title } }
+    orderBy: [{ createdAt: DESC }]
+  ) {
+    id
+    title
+    content
+    mood
+    image
+    caption
+    createdAt
+    updatedAt
+  }
+}

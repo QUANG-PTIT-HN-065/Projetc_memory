@@ -1,0 +1,353 @@
+"""
+✨ `PriorityLevel_Expr` is a server value variant of enum type `PriorityLevel`.
+
+It accepts a CEL expression.
+"""
+scalar PriorityLevel_Expr
+"""
+✨ `TodoItem_KeyOutput` returns the primary key fields of table type `TodoItem`.
+
+It has the same format as `TodoItem_Key`, but is only used as mutation return value.
+"""
+scalar TodoItem_KeyOutput
+"""
+✨ Generated filter input type for table 'PriorityLevel'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input PriorityLevel_Filter {
+  """
+  Match if field is exactly equal to provided value.
+  """
+  eq: PriorityLevel
+  """
+  ✨ `_expr` server value variant of `eq` (Match if field is exactly equal to provided value.)
+  """
+  eq_expr: PriorityLevel_Expr @fdc_forbiddenInVariables
+  """
+  Match if field is not equal to provided value.
+  """
+  ne: PriorityLevel
+  """
+  ✨ `_expr` server value variant of `ne` (Match if field is not equal to provided value.)
+  """
+  ne_expr: PriorityLevel_Expr @fdc_forbiddenInVariables
+  """
+  When true, match if field `IS NULL`. When false, match if field is `NOT NULL`.
+  """
+  isNull: Boolean
+  """
+  Match if field value is among the provided list of values.
+  """
+  in: [PriorityLevel!]
+  """
+  Match if field value is not among the provided list of values.
+  """
+  nin: [PriorityLevel!]
+  """
+  Match if field value is greater than the provided value, based on index ordering of supported enum values.
+  """
+  gt: PriorityLevel
+  """
+  ✨ `_expr` server value variant of `gt` (Match if field value is greater than the provided value, based on index ordering of supported enum values.)
+  """
+  gt_expr: PriorityLevel_Expr @fdc_forbiddenInVariables
+  """
+  Match if field is greater than or equal to the provided value.
+  """
+  ge: PriorityLevel
+  """
+  ✨ `_expr` server value variant of `ge` (Match if field is greater than or equal to the provided value.)
+  """
+  ge_expr: PriorityLevel_Expr @fdc_forbiddenInVariables
+  """
+  Match if field value is less than the provided value, based on index ordering of supported enum values.
+  """
+  lt: PriorityLevel
+  """
+  ✨ `_expr` server value variant of `lt` (Match if field value is less than the provided value, based on index ordering of supported enum values.)
+  """
+  lt_expr: PriorityLevel_Expr @fdc_forbiddenInVariables
+  """
+  Match if field is less than or equal to the provided value, based on index ordering of supported enum values.
+  """
+  le: PriorityLevel
+  """
+  ✨ `_expr` server value variant of `le` (Match if field is less than or equal to the provided value, based on index ordering of supported enum values.)
+  """
+  le_expr: PriorityLevel_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated list filter input type for table 'PriorityLevel'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input PriorityLevel_ListFilter {
+  """
+  Match if list field contains the provided value as a member.
+  """
+  includes: PriorityLevel
+  """
+  ✨ `_expr` server value variant of `includes` (Match if list field contains the provided value as a member.)
+  """
+  includes_expr: PriorityLevel_Expr @fdc_forbiddenInVariables
+  """
+  Match if list field contains all of the provided values as members.
+  """
+  includesAll: [PriorityLevel!]
+  """
+  Match if list field does not contain the provided value as a member.
+  """
+  excludes: PriorityLevel
+  """
+  ✨ `_expr` server value variant of `excludes` (Match if list field does not contain the provided value as a member.)
+  """
+  excludes_expr: PriorityLevel_Expr @fdc_forbiddenInVariables
+  """
+  Match if list field does not contain any of the provided values as members.
+  """
+  excludesAll: [PriorityLevel!]
+  """
+  The desired number of enum values that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: PriorityLevel_Filter
+}
+"""
+✨ Generated data input type for table 'TodoItem'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input TodoItem_Data {
+  """
+  ✨ Generated from Field `TodoItem`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `TodoItem`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `TodoItem`.`completed` of type `Boolean!`
+  """
+  completed: Boolean
+  """
+  ✨ `_expr` server value variant of `completed` (✨ Generated from Field `TodoItem`.`completed` of type `Boolean!`)
+  """
+  completed_expr: Boolean_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `TodoItem`.`deadline` of type `Timestamp`
+  """
+  deadline: Timestamp
+  """
+  ✨ `_expr` server value variant of `deadline` (✨ Generated from Field `TodoItem`.`deadline` of type `Timestamp`)
+  """
+  deadline_expr: Timestamp_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_time` server value variant of `deadline` (✨ Generated from Field `TodoItem`.`deadline` of type `Timestamp`)
+  """
+  deadline_time: Timestamp_Relative @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `deadline` (✨ Generated from Field `TodoItem`.`deadline` of type `Timestamp`)
+  """
+  deadline_update: [Timestamp_Update!] @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `TodoItem`.`priority` of type `PriorityLevel`
+  """
+  priority: PriorityLevel
+  """
+  ✨ `_expr` server value variant of `priority` (✨ Generated from Field `TodoItem`.`priority` of type `PriorityLevel`)
+  """
+  priority_expr: PriorityLevel_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `TodoItem`.`text` of type `String!`
+  """
+  text: String
+  """
+  ✨ `_expr` server value variant of `text` (✨ Generated from Field `TodoItem`.`text` of type `String!`)
+  """
+  text_expr: String_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated filter input type for table 'TodoItem'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input TodoItem_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [TodoItem_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: TodoItem_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [TodoItem_Filter!]
+  """
+  ✨ Generated from Field `TodoItem`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `TodoItem`.`completed` of type `Boolean!`
+  """
+  completed: Boolean_Filter
+  """
+  ✨ Generated from Field `TodoItem`.`deadline` of type `Timestamp`
+  """
+  deadline: Timestamp_Filter
+  """
+  ✨ Generated from Field `TodoItem`.`priority` of type `PriorityLevel`
+  """
+  priority: PriorityLevel_Filter
+  """
+  ✨ Generated from Field `TodoItem`.`text` of type `String!`
+  """
+  text: String_Filter
+}
+"""
+✨ Generated first-row input type for table 'TodoItem'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input TodoItem_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [TodoItem_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: TodoItem_Filter
+}
+"""
+✨ Generated having input type for table 'TodoItem'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input TodoItem_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [TodoItem_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: TodoItem_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [TodoItem_Having!]
+  """
+  ✨ Generated from Field `TodoItem`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `TodoItem`.`completed_count` of type `Int!`
+  """
+  completed_count: Int_Filter
+  """
+  ✨ Generated from Field `TodoItem`.`deadline_count` of type `Int!`
+  """
+  deadline_count: Int_Filter
+  """
+  ✨ Generated from Field `TodoItem`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `TodoItem`.`priority_count` of type `Int!`
+  """
+  priority_count: Int_Filter
+  """
+  ✨ Generated from Field `TodoItem`.`text_count` of type `Int!`
+  """
+  text_count: Int_Filter
+  """
+  ✨ Generated from Field `TodoItem`.`deadline_min` of type `Timestamp`
+  """
+  deadline_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `TodoItem`.`deadline_max` of type `Timestamp`
+  """
+  deadline_max: Timestamp_Filter
+}
+"""
+✨ Generated key input type for table 'TodoItem'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input TodoItem_Key {
+  """
+  ✨ Generated from Field `TodoItem`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `TodoItem`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated list filter input type for table 'TodoItem'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input TodoItem_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: TodoItem_Filter
+}
+"""
+✨ Generated order input type for table 'TodoItem'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input TodoItem_Order {
+  """
+  ✨ Generated from Field `TodoItem`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `TodoItem`.`completed` of type `Boolean!`
+  """
+  completed: OrderDirection
+  """
+  ✨ Generated from Field `TodoItem`.`deadline` of type `Timestamp`
+  """
+  deadline: OrderDirection
+  """
+  ✨ Generated from Field `TodoItem`.`priority` of type `PriorityLevel`
+  """
+  priority: OrderDirection
+  """
+  ✨ Generated from Field `TodoItem`.`text` of type `String!`
+  """
+  text: OrderDirection
+  """
+  ✨ Generated from Field `TodoItem`.`_count` of type `Int!`
+  """
+  _count: OrderDirection
+  """
+  ✨ Generated from Field `TodoItem`.`completed_count` of type `Int!`
+  """
+  completed_count: OrderDirection
+  """
+  ✨ Generated from Field `TodoItem`.`deadline_count` of type `Int!`
+  """
+  deadline_count: OrderDirection
+  """
+  ✨ Generated from Field `TodoItem`.`id_count` of type `Int!`
+  """
+  id_count: OrderDirection
+  """
+  ✨ Generated from Field `TodoItem`.`priority_count` of type `Int!`
+  """
+  priority_count: OrderDirection
+  """
+  ✨ Generated from Field `TodoItem`.`text_count` of type `Int!`
+  """
+  text_count: OrderDirection
+  """
+  ✨ Generated from Field `TodoItem`.`deadline_min` of type `Timestamp`
+  """
+  deadline_min: OrderDirection
+  """
+  ✨ Generated from Field `TodoItem`.`deadline_max` of type `Timestamp`
+  """
+  deadline_max: OrderDirection
+}

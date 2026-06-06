@@ -1,0 +1,67 @@
+extend type TodoItem {
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "TodoItem", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `TodoItem` table.
+  """
+  _count: Int! @fdc_generated(from: "TodoItem.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TodoItem` table where the `completed` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  completed_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TodoItem.completed", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TodoItem` table where the `deadline` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  deadline_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TodoItem.deadline", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TodoItem` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TodoItem.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TodoItem` table where the `priority` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  priority_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TodoItem.priority", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TodoItem` table where the `text` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  text_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TodoItem.text", purpose: QUERY_COUNT)
+  """
+  ✨ Minimum of the `deadline` field in the `TodoItem` table.
+  """
+  deadline_min: Timestamp @fdc_generated(from: "TodoItem.deadline", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `deadline` field in the `TodoItem` table.
+  """
+  deadline_max: Timestamp @fdc_generated(from: "TodoItem.deadline", purpose: QUERY_MAX)
+  """
+  A generated field that is used for caching results in SDKs.
+  """
+  _id: ID! @fdc_generated(from: "TodoItem.id", purpose: ENTITY_ID)
+}

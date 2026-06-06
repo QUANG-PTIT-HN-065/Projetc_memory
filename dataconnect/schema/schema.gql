@@ -1,0 +1,24 @@
+type TodoItem @table {
+  id: UUID! @default(expr: "uuidV4()")
+  text: String!
+  completed: Boolean!
+  priority: PriorityLevel
+  deadline: Timestamp
+}
+
+type DiaryEntry @table {
+  id: UUID! @default(expr: "uuidV4()")
+  title: String!
+  content: String!
+  mood: String!
+  image: String
+  caption: String
+  createdAt: Timestamp! @default(expr: "now()")
+  updatedAt: Timestamp! @default(expr: "now()")
+}
+
+enum PriorityLevel {
+  low
+  medium
+  high
+}

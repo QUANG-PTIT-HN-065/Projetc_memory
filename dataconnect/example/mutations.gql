@@ -1,0 +1,97 @@
+# Tạo mới một TodoItem
+mutation CreateTodoItem(
+  $text: String!
+  $completed: Boolean!
+  $priority: PriorityLevel
+  $deadline: Timestamp
+) @auth(level: PUBLIC) {
+  todoItem_insert(
+    data: {
+      text: $text
+      completed: $completed
+      priority: $priority
+      deadline: $deadline
+    }
+  )
+}
+
+# Cập nhật một TodoItem theo ID
+mutation UpdateTodoItem(
+  $id: TodoItem_Key!
+  $text: String
+  $completed: Boolean
+  $priority: PriorityLevel
+  $deadline: Timestamp
+) @auth(level: PUBLIC) {
+  todoItem_update(
+    key: $id
+    data: {
+      text: $text
+      completed: $completed
+      priority: $priority
+      deadline: $deadline
+    }
+  )
+}
+
+# Xóa một TodoItem theo ID
+mutation DeleteTodoItem($id: TodoItem_Key!) @auth(level: PUBLIC) {
+  todoItem_delete(key: $id)
+}
+
+# Đánh dấu hoàn thành/chưa hoàn thành
+mutation ToggleTodoItemCompleted(
+  $id: TodoItem_Key!
+  $completed: Boolean!
+) @auth(level: PUBLIC) {
+  todoItem_update(
+    key: $id
+    data: { completed: $completed }
+  )
+}
+
+# Tạo mới một DiaryEntry
+mutation CreateDiaryEntry(
+  $title: String!
+  $content: String!
+  $mood: String!
+  $image: String
+  $caption: String
+) @auth(level: PUBLIC) {
+  diaryEntry_insert(
+    data: {
+      title: $title
+      content: $content
+      mood: $mood
+      image: $image
+      caption: $caption
+    }
+  )
+}
+
+# Cập nhật một DiaryEntry theo ID
+mutation UpdateDiaryEntry(
+  $id: DiaryEntry_Key!
+  $title: String
+  $content: String
+  $mood: String
+  $image: String
+  $caption: String
+) @auth(level: PUBLIC) {
+  diaryEntry_update(
+    key: $id
+    data: {
+      title: $title
+      content: $content
+      mood: $mood
+      image: $image
+      caption: $caption
+    }
+  )
+}
+
+# Xóa một DiaryEntry theo ID
+mutation DeleteDiaryEntry($id: DiaryEntry_Key!) @auth(level: PUBLIC) {
+  diaryEntry_delete(key: $id)
+}
+

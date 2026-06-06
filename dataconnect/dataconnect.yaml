@@ -1,0 +1,13 @@
+specVersion: "v1"
+serviceId: "my-projetc-4c9bb-service"
+location: "asia-southeast1"
+schemas:
+  - source: "./schema"
+    datasource:
+      postgresql:
+        database: "my-projetc-4c9bb-database"
+        cloudSql:
+          instanceId: "my-projetc-4c9bb-instance"
+          # schemaValidation: "STRICT"     # STRICT mode makes Postgres schema match Data Connect exactly.
+          # schemaValidation: "COMPATIBLE" # COMPATIBLE mode makes Postgres schema compatible with Data Connect.
+connectorDirs: ["./example"]
