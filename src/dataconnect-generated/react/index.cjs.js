@@ -1,4 +1,4 @@
-const { createTodoItemRef, updateTodoItemRef, deleteTodoItemRef, toggleTodoItemCompletedRef, listTodoItemsRef, getTodoItemRef, listTodoItemsByStatusRef, listTodoItemsByPriorityRef, connectorConfig } = require('../index.cjs.js');
+const { createTodoItemRef, updateTodoItemRef, deleteTodoItemRef, toggleTodoItemCompletedRef, createDiaryEntryRef, updateDiaryEntryRef, deleteDiaryEntryRef, listTodoItemsRef, getTodoItemRef, listTodoItemsByStatusRef, listTodoItemsByPriorityRef, listDiaryEntriesRef, getDiaryEntryRef, searchDiaryEntriesByTitleRef, connectorConfig } = require('../index.cjs.js');
 const { validateArgs, CallerSdkTypeEnum } = require('firebase/data-connect');
 const { useDataConnectQuery, useDataConnectMutation, validateReactArgs } = require('@tanstack-query-firebase/react/data-connect');
 
@@ -34,6 +34,30 @@ exports.useToggleTodoItemCompleted = function useToggleTodoItemCompleted(dcOrOpt
   return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
 }
 
+exports.useCreateDiaryEntry = function useCreateDiaryEntry(dcOrOptions, options) {
+  const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
+  function refFactory(vars) {
+    return createDiaryEntryRef(dcInstance, vars);
+  }
+  return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+
+exports.useUpdateDiaryEntry = function useUpdateDiaryEntry(dcOrOptions, options) {
+  const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
+  function refFactory(vars) {
+    return updateDiaryEntryRef(dcInstance, vars);
+  }
+  return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+
+exports.useDeleteDiaryEntry = function useDeleteDiaryEntry(dcOrOptions, options) {
+  const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
+  function refFactory(vars) {
+    return deleteDiaryEntryRef(dcInstance, vars);
+  }
+  return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+
 
 exports.useListTodoItems = function useListTodoItems(dcOrOptions, options) {
   const { dc: dcInstance, options: inputOpts } = validateReactArgs(connectorConfig, dcOrOptions, options);
@@ -56,5 +80,23 @@ exports.useListTodoItemsByStatus = function useListTodoItemsByStatus(dcOrVars, v
 exports.useListTodoItemsByPriority = function useListTodoItemsByPriority(dcOrVars, varsOrOptions, options) {
   const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateReactArgs(connectorConfig, dcOrVars, varsOrOptions, options, true, true);
   const ref = listTodoItemsByPriorityRef(dcInstance, inputVars);
+  return useDataConnectQuery(ref, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+
+exports.useListDiaryEntries = function useListDiaryEntries(dcOrOptions, options) {
+  const { dc: dcInstance, options: inputOpts } = validateReactArgs(connectorConfig, dcOrOptions, options);
+  const ref = listDiaryEntriesRef(dcInstance);
+  return useDataConnectQuery(ref, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+
+exports.useGetDiaryEntry = function useGetDiaryEntry(dcOrVars, varsOrOptions, options) {
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateReactArgs(connectorConfig, dcOrVars, varsOrOptions, options, true, true);
+  const ref = getDiaryEntryRef(dcInstance, inputVars);
+  return useDataConnectQuery(ref, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+
+exports.useSearchDiaryEntriesByTitle = function useSearchDiaryEntriesByTitle(dcOrVars, varsOrOptions, options) {
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateReactArgs(connectorConfig, dcOrVars, varsOrOptions, options, true, true);
+  const ref = searchDiaryEntriesByTitleRef(dcInstance, inputVars);
   return useDataConnectQuery(ref, inputOpts, CallerSdkTypeEnum.GeneratedReact);
 }

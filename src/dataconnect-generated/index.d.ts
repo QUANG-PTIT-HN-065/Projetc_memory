@@ -17,8 +17,21 @@ export enum PriorityLevel {
 
 
 
+export interface CreateDiaryEntryData {
+  diaryEntry_insert: DiaryEntry_Key;
+}
+
+export interface CreateDiaryEntryVariables {
+  title: string;
+  content: string;
+  mood: string;
+  image?: string | null;
+  caption?: string | null;
+  createdAt: TimestampString;
+  updatedAt: TimestampString;
+}
+
 export interface CreateTodoItemData {
-  [x: string]: string;
   todoItem_insert: TodoItem_Key;
 }
 
@@ -29,12 +42,42 @@ export interface CreateTodoItemVariables {
   deadline?: TimestampString | null;
 }
 
+export interface DeleteDiaryEntryData {
+  diaryEntry_delete?: DiaryEntry_Key | null;
+}
+
+export interface DeleteDiaryEntryVariables {
+  id: DiaryEntry_Key;
+}
+
 export interface DeleteTodoItemData {
   todoItem_delete?: TodoItem_Key | null;
 }
 
 export interface DeleteTodoItemVariables {
   id: TodoItem_Key;
+}
+
+export interface DiaryEntry_Key {
+  id: UUIDString;
+  __typename?: 'DiaryEntry_Key';
+}
+
+export interface GetDiaryEntryData {
+  diaryEntry?: {
+    id: UUIDString;
+    title: string;
+    content: string;
+    mood: string;
+    image?: string | null;
+    caption?: string | null;
+    createdAt: TimestampString;
+    updatedAt: TimestampString;
+  } & DiaryEntry_Key;
+}
+
+export interface GetDiaryEntryVariables {
+  id: DiaryEntry_Key;
 }
 
 export interface GetTodoItemData {
@@ -49,6 +92,19 @@ export interface GetTodoItemData {
 
 export interface GetTodoItemVariables {
   id: TodoItem_Key;
+}
+
+export interface ListDiaryEntriesData {
+  diaryEntries: ({
+    id: UUIDString;
+    title: string;
+    content: string;
+    mood: string;
+    image?: string | null;
+    caption?: string | null;
+    createdAt: TimestampString;
+    updatedAt: TimestampString;
+  } & DiaryEntry_Key)[];
 }
 
 export interface ListTodoItemsByPriorityData {
@@ -89,6 +145,23 @@ export interface ListTodoItemsData {
   } & TodoItem_Key)[];
 }
 
+export interface SearchDiaryEntriesByTitleData {
+  diaryEntries: ({
+    id: UUIDString;
+    title: string;
+    content: string;
+    mood: string;
+    image?: string | null;
+    caption?: string | null;
+    createdAt: TimestampString;
+    updatedAt: TimestampString;
+  } & DiaryEntry_Key)[];
+}
+
+export interface SearchDiaryEntriesByTitleVariables {
+  title: string;
+}
+
 export interface TodoItem_Key {
   id: UUIDString;
   __typename?: 'TodoItem_Key';
@@ -101,6 +174,20 @@ export interface ToggleTodoItemCompletedData {
 export interface ToggleTodoItemCompletedVariables {
   id: TodoItem_Key;
   completed: boolean;
+}
+
+export interface UpdateDiaryEntryData {
+  diaryEntry_update?: DiaryEntry_Key | null;
+}
+
+export interface UpdateDiaryEntryVariables {
+  id: DiaryEntry_Key;
+  title?: string | null;
+  content?: string | null;
+  mood?: string | null;
+  image?: string | null;
+  caption?: string | null;
+  updatedAt?: TimestampString | null;
 }
 
 export interface UpdateTodoItemData {
@@ -163,6 +250,42 @@ export const toggleTodoItemCompletedRef: ToggleTodoItemCompletedRef;
 export function toggleTodoItemCompleted(vars: ToggleTodoItemCompletedVariables): MutationPromise<ToggleTodoItemCompletedData, ToggleTodoItemCompletedVariables>;
 export function toggleTodoItemCompleted(dc: DataConnect, vars: ToggleTodoItemCompletedVariables): MutationPromise<ToggleTodoItemCompletedData, ToggleTodoItemCompletedVariables>;
 
+interface CreateDiaryEntryRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateDiaryEntryVariables): MutationRef<CreateDiaryEntryData, CreateDiaryEntryVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: CreateDiaryEntryVariables): MutationRef<CreateDiaryEntryData, CreateDiaryEntryVariables>;
+  operationName: string;
+}
+export const createDiaryEntryRef: CreateDiaryEntryRef;
+
+export function createDiaryEntry(vars: CreateDiaryEntryVariables): MutationPromise<CreateDiaryEntryData, CreateDiaryEntryVariables>;
+export function createDiaryEntry(dc: DataConnect, vars: CreateDiaryEntryVariables): MutationPromise<CreateDiaryEntryData, CreateDiaryEntryVariables>;
+
+interface UpdateDiaryEntryRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UpdateDiaryEntryVariables): MutationRef<UpdateDiaryEntryData, UpdateDiaryEntryVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: UpdateDiaryEntryVariables): MutationRef<UpdateDiaryEntryData, UpdateDiaryEntryVariables>;
+  operationName: string;
+}
+export const updateDiaryEntryRef: UpdateDiaryEntryRef;
+
+export function updateDiaryEntry(vars: UpdateDiaryEntryVariables): MutationPromise<UpdateDiaryEntryData, UpdateDiaryEntryVariables>;
+export function updateDiaryEntry(dc: DataConnect, vars: UpdateDiaryEntryVariables): MutationPromise<UpdateDiaryEntryData, UpdateDiaryEntryVariables>;
+
+interface DeleteDiaryEntryRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: DeleteDiaryEntryVariables): MutationRef<DeleteDiaryEntryData, DeleteDiaryEntryVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: DeleteDiaryEntryVariables): MutationRef<DeleteDiaryEntryData, DeleteDiaryEntryVariables>;
+  operationName: string;
+}
+export const deleteDiaryEntryRef: DeleteDiaryEntryRef;
+
+export function deleteDiaryEntry(vars: DeleteDiaryEntryVariables): MutationPromise<DeleteDiaryEntryData, DeleteDiaryEntryVariables>;
+export function deleteDiaryEntry(dc: DataConnect, vars: DeleteDiaryEntryVariables): MutationPromise<DeleteDiaryEntryData, DeleteDiaryEntryVariables>;
+
 interface ListTodoItemsRef {
   /* Allow users to create refs without passing in DataConnect */
   (): QueryRef<ListTodoItemsData, undefined>;
@@ -210,4 +333,40 @@ export const listTodoItemsByPriorityRef: ListTodoItemsByPriorityRef;
 
 export function listTodoItemsByPriority(vars: ListTodoItemsByPriorityVariables, options?: ExecuteQueryOptions): QueryPromise<ListTodoItemsByPriorityData, ListTodoItemsByPriorityVariables>;
 export function listTodoItemsByPriority(dc: DataConnect, vars: ListTodoItemsByPriorityVariables, options?: ExecuteQueryOptions): QueryPromise<ListTodoItemsByPriorityData, ListTodoItemsByPriorityVariables>;
+
+interface ListDiaryEntriesRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<ListDiaryEntriesData, undefined>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect): QueryRef<ListDiaryEntriesData, undefined>;
+  operationName: string;
+}
+export const listDiaryEntriesRef: ListDiaryEntriesRef;
+
+export function listDiaryEntries(options?: ExecuteQueryOptions): QueryPromise<ListDiaryEntriesData, undefined>;
+export function listDiaryEntries(dc: DataConnect, options?: ExecuteQueryOptions): QueryPromise<ListDiaryEntriesData, undefined>;
+
+interface GetDiaryEntryRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: GetDiaryEntryVariables): QueryRef<GetDiaryEntryData, GetDiaryEntryVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: GetDiaryEntryVariables): QueryRef<GetDiaryEntryData, GetDiaryEntryVariables>;
+  operationName: string;
+}
+export const getDiaryEntryRef: GetDiaryEntryRef;
+
+export function getDiaryEntry(vars: GetDiaryEntryVariables, options?: ExecuteQueryOptions): QueryPromise<GetDiaryEntryData, GetDiaryEntryVariables>;
+export function getDiaryEntry(dc: DataConnect, vars: GetDiaryEntryVariables, options?: ExecuteQueryOptions): QueryPromise<GetDiaryEntryData, GetDiaryEntryVariables>;
+
+interface SearchDiaryEntriesByTitleRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: SearchDiaryEntriesByTitleVariables): QueryRef<SearchDiaryEntriesByTitleData, SearchDiaryEntriesByTitleVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: SearchDiaryEntriesByTitleVariables): QueryRef<SearchDiaryEntriesByTitleData, SearchDiaryEntriesByTitleVariables>;
+  operationName: string;
+}
+export const searchDiaryEntriesByTitleRef: SearchDiaryEntriesByTitleRef;
+
+export function searchDiaryEntriesByTitle(vars: SearchDiaryEntriesByTitleVariables, options?: ExecuteQueryOptions): QueryPromise<SearchDiaryEntriesByTitleData, SearchDiaryEntriesByTitleVariables>;
+export function searchDiaryEntriesByTitle(dc: DataConnect, vars: SearchDiaryEntriesByTitleVariables, options?: ExecuteQueryOptions): QueryPromise<SearchDiaryEntriesByTitleData, SearchDiaryEntriesByTitleVariables>;
 

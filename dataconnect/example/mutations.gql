@@ -57,6 +57,8 @@ mutation CreateDiaryEntry(
   $mood: String!
   $image: String
   $caption: String
+  $createdAt: Timestamp!
+  $updatedAt: Timestamp!
 ) @auth(level: PUBLIC) {
   diaryEntry_insert(
     data: {
@@ -65,6 +67,8 @@ mutation CreateDiaryEntry(
       mood: $mood
       image: $image
       caption: $caption
+      createdAt: $createdAt
+      updatedAt: $updatedAt
     }
   )
 }
@@ -77,6 +81,7 @@ mutation UpdateDiaryEntry(
   $mood: String
   $image: String
   $caption: String
+  $updatedAt: Timestamp
 ) @auth(level: PUBLIC) {
   diaryEntry_update(
     key: $id
@@ -86,6 +91,7 @@ mutation UpdateDiaryEntry(
       mood: $mood
       image: $image
       caption: $caption
+      updatedAt: $updatedAt
     }
   )
 }
@@ -94,4 +100,3 @@ mutation UpdateDiaryEntry(
 mutation DeleteDiaryEntry($id: DiaryEntry_Key!) @auth(level: PUBLIC) {
   diaryEntry_delete(key: $id)
 }
-

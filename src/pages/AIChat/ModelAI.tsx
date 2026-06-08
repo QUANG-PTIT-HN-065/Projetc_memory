@@ -69,7 +69,7 @@ export const ModelAI = ({ isTalking, isHappy, onRandomSpeech, onClickSpeech }: M
 
     // Smile + zoom nhẹ lần 2 để "vui vẻ"
     play("smile");
-    play("zoom");
+    // play("zoom");
     set("happy_zoomout", () => {
       stop("zoom");
       play("zoomout");

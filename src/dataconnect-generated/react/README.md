@@ -21,11 +21,17 @@ You can also follow the instructions from the [Data Connect documentation](https
   - [*GetTodoItem*](#gettodoitem)
   - [*ListTodoItemsByStatus*](#listtodoitemsbystatus)
   - [*ListTodoItemsByPriority*](#listtodoitemsbypriority)
+  - [*ListDiaryEntries*](#listdiaryentries)
+  - [*GetDiaryEntry*](#getdiaryentry)
+  - [*SearchDiaryEntriesByTitle*](#searchdiaryentriesbytitle)
 - [**Mutations**](#mutations)
   - [*CreateTodoItem*](#createtodoitem)
   - [*UpdateTodoItem*](#updatetodoitem)
   - [*DeleteTodoItem*](#deletetodoitem)
   - [*ToggleTodoItemCompleted*](#toggletodoitemcompleted)
+  - [*CreateDiaryEntry*](#creatediaryentry)
+  - [*UpdateDiaryEntry*](#updatediaryentry)
+  - [*DeleteDiaryEntry*](#deletediaryentry)
 
 # TanStack Query Firebase & TanStack React Query
 This SDK provides [React](https://react.dev/) hooks generated specific to your application, for the operations found in the connector `example`. These hooks are generated using [TanStack Query Firebase](https://react-query-firebase.invertase.dev/) by our partners at Invertase, a library built on top of [TanStack React Query v5](https://tanstack.com/query/v5/docs/framework/react/overview).
@@ -456,6 +462,266 @@ export default function ListTodoItemsByPriorityComponent() {
 }
 ```
 
+## ListDiaryEntries
+You can execute the `ListDiaryEntries` Query using the following Query hook function, which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts):
+
+```javascript
+useListDiaryEntries(dc: DataConnect, options?: useDataConnectQueryOptions<ListDiaryEntriesData>): UseDataConnectQueryResult<ListDiaryEntriesData, undefined>;
+```
+You can also pass in a `DataConnect` instance to the Query hook function.
+```javascript
+useListDiaryEntries(options?: useDataConnectQueryOptions<ListDiaryEntriesData>): UseDataConnectQueryResult<ListDiaryEntriesData, undefined>;
+```
+
+### Variables
+The `ListDiaryEntries` Query has no variables.
+### Return Type
+Recall that calling the `ListDiaryEntries` Query hook function returns a `UseQueryResult` object. This object holds the state of your Query, including whether the Query is loading, has completed, or has succeeded/failed, and any data returned by the Query, among other things.
+
+To check the status of a Query, use the `UseQueryResult.status` field. You can also check for pending / success / error status using the `UseQueryResult.isPending`, `UseQueryResult.isSuccess`, and `UseQueryResult.isError` fields.
+
+To access the data returned by a Query, use the `UseQueryResult.data` field. The data for the `ListDiaryEntries` Query is of type `ListDiaryEntriesData`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface ListDiaryEntriesData {
+  diaryEntries: ({
+    id: UUIDString;
+    title: string;
+    content: string;
+    mood: string;
+    image?: string | null;
+    caption?: string | null;
+    createdAt: TimestampString;
+    updatedAt: TimestampString;
+  } & DiaryEntry_Key)[];
+}
+```
+
+To learn more about the `UseQueryResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useQuery).
+
+### Using `ListDiaryEntries`'s Query hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig } from '@dataconnect/generated';
+import { useListDiaryEntries } from '@dataconnect/generated/react'
+
+export default function ListDiaryEntriesComponent() {
+  // You don't have to do anything to "execute" the Query.
+  // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
+  const query = useListDiaryEntries();
+
+  // You can also pass in a `DataConnect` instance to the Query hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const query = useListDiaryEntries(dataConnect);
+
+  // You can also pass in a `useDataConnectQueryOptions` object to the Query hook function.
+  const options = { staleTime: 5 * 1000 };
+  const query = useListDiaryEntries(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectQueryOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = { staleTime: 5 * 1000 };
+  const query = useListDiaryEntries(dataConnect, options);
+
+  // Then, you can render your component dynamically based on the status of the Query.
+  if (query.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (query.isError) {
+    return <div>Error: {query.error.message}</div>;
+  }
+
+  // If the Query is successful, you can access the data returned using the `UseQueryResult.data` field.
+  if (query.isSuccess) {
+    console.log(query.data.diaryEntries);
+  }
+  return <div>Query execution {query.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## GetDiaryEntry
+You can execute the `GetDiaryEntry` Query using the following Query hook function, which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts):
+
+```javascript
+useGetDiaryEntry(dc: DataConnect, vars: GetDiaryEntryVariables, options?: useDataConnectQueryOptions<GetDiaryEntryData>): UseDataConnectQueryResult<GetDiaryEntryData, GetDiaryEntryVariables>;
+```
+You can also pass in a `DataConnect` instance to the Query hook function.
+```javascript
+useGetDiaryEntry(vars: GetDiaryEntryVariables, options?: useDataConnectQueryOptions<GetDiaryEntryData>): UseDataConnectQueryResult<GetDiaryEntryData, GetDiaryEntryVariables>;
+```
+
+### Variables
+The `GetDiaryEntry` Query requires an argument of type `GetDiaryEntryVariables`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface GetDiaryEntryVariables {
+  id: DiaryEntry_Key;
+}
+```
+### Return Type
+Recall that calling the `GetDiaryEntry` Query hook function returns a `UseQueryResult` object. This object holds the state of your Query, including whether the Query is loading, has completed, or has succeeded/failed, and any data returned by the Query, among other things.
+
+To check the status of a Query, use the `UseQueryResult.status` field. You can also check for pending / success / error status using the `UseQueryResult.isPending`, `UseQueryResult.isSuccess`, and `UseQueryResult.isError` fields.
+
+To access the data returned by a Query, use the `UseQueryResult.data` field. The data for the `GetDiaryEntry` Query is of type `GetDiaryEntryData`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface GetDiaryEntryData {
+  diaryEntry?: {
+    id: UUIDString;
+    title: string;
+    content: string;
+    mood: string;
+    image?: string | null;
+    caption?: string | null;
+    createdAt: TimestampString;
+    updatedAt: TimestampString;
+  } & DiaryEntry_Key;
+}
+```
+
+To learn more about the `UseQueryResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useQuery).
+
+### Using `GetDiaryEntry`'s Query hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, GetDiaryEntryVariables } from '@dataconnect/generated';
+import { useGetDiaryEntry } from '@dataconnect/generated/react'
+
+export default function GetDiaryEntryComponent() {
+  // The `useGetDiaryEntry` Query hook requires an argument of type `GetDiaryEntryVariables`:
+  const getDiaryEntryVars: GetDiaryEntryVariables = {
+    id: ..., 
+  };
+
+  // You don't have to do anything to "execute" the Query.
+  // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
+  const query = useGetDiaryEntry(getDiaryEntryVars);
+  // Variables can be defined inline as well.
+  const query = useGetDiaryEntry({ id: ..., });
+
+  // You can also pass in a `DataConnect` instance to the Query hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const query = useGetDiaryEntry(dataConnect, getDiaryEntryVars);
+
+  // You can also pass in a `useDataConnectQueryOptions` object to the Query hook function.
+  const options = { staleTime: 5 * 1000 };
+  const query = useGetDiaryEntry(getDiaryEntryVars, options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectQueryOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = { staleTime: 5 * 1000 };
+  const query = useGetDiaryEntry(dataConnect, getDiaryEntryVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Query.
+  if (query.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (query.isError) {
+    return <div>Error: {query.error.message}</div>;
+  }
+
+  // If the Query is successful, you can access the data returned using the `UseQueryResult.data` field.
+  if (query.isSuccess) {
+    console.log(query.data.diaryEntry);
+  }
+  return <div>Query execution {query.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## SearchDiaryEntriesByTitle
+You can execute the `SearchDiaryEntriesByTitle` Query using the following Query hook function, which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts):
+
+```javascript
+useSearchDiaryEntriesByTitle(dc: DataConnect, vars: SearchDiaryEntriesByTitleVariables, options?: useDataConnectQueryOptions<SearchDiaryEntriesByTitleData>): UseDataConnectQueryResult<SearchDiaryEntriesByTitleData, SearchDiaryEntriesByTitleVariables>;
+```
+You can also pass in a `DataConnect` instance to the Query hook function.
+```javascript
+useSearchDiaryEntriesByTitle(vars: SearchDiaryEntriesByTitleVariables, options?: useDataConnectQueryOptions<SearchDiaryEntriesByTitleData>): UseDataConnectQueryResult<SearchDiaryEntriesByTitleData, SearchDiaryEntriesByTitleVariables>;
+```
+
+### Variables
+The `SearchDiaryEntriesByTitle` Query requires an argument of type `SearchDiaryEntriesByTitleVariables`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface SearchDiaryEntriesByTitleVariables {
+  title: string;
+}
+```
+### Return Type
+Recall that calling the `SearchDiaryEntriesByTitle` Query hook function returns a `UseQueryResult` object. This object holds the state of your Query, including whether the Query is loading, has completed, or has succeeded/failed, and any data returned by the Query, among other things.
+
+To check the status of a Query, use the `UseQueryResult.status` field. You can also check for pending / success / error status using the `UseQueryResult.isPending`, `UseQueryResult.isSuccess`, and `UseQueryResult.isError` fields.
+
+To access the data returned by a Query, use the `UseQueryResult.data` field. The data for the `SearchDiaryEntriesByTitle` Query is of type `SearchDiaryEntriesByTitleData`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface SearchDiaryEntriesByTitleData {
+  diaryEntries: ({
+    id: UUIDString;
+    title: string;
+    content: string;
+    mood: string;
+    image?: string | null;
+    caption?: string | null;
+    createdAt: TimestampString;
+    updatedAt: TimestampString;
+  } & DiaryEntry_Key)[];
+}
+```
+
+To learn more about the `UseQueryResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useQuery).
+
+### Using `SearchDiaryEntriesByTitle`'s Query hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, SearchDiaryEntriesByTitleVariables } from '@dataconnect/generated';
+import { useSearchDiaryEntriesByTitle } from '@dataconnect/generated/react'
+
+export default function SearchDiaryEntriesByTitleComponent() {
+  // The `useSearchDiaryEntriesByTitle` Query hook requires an argument of type `SearchDiaryEntriesByTitleVariables`:
+  const searchDiaryEntriesByTitleVars: SearchDiaryEntriesByTitleVariables = {
+    title: ..., 
+  };
+
+  // You don't have to do anything to "execute" the Query.
+  // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
+  const query = useSearchDiaryEntriesByTitle(searchDiaryEntriesByTitleVars);
+  // Variables can be defined inline as well.
+  const query = useSearchDiaryEntriesByTitle({ title: ..., });
+
+  // You can also pass in a `DataConnect` instance to the Query hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const query = useSearchDiaryEntriesByTitle(dataConnect, searchDiaryEntriesByTitleVars);
+
+  // You can also pass in a `useDataConnectQueryOptions` object to the Query hook function.
+  const options = { staleTime: 5 * 1000 };
+  const query = useSearchDiaryEntriesByTitle(searchDiaryEntriesByTitleVars, options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectQueryOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = { staleTime: 5 * 1000 };
+  const query = useSearchDiaryEntriesByTitle(dataConnect, searchDiaryEntriesByTitleVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Query.
+  if (query.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (query.isError) {
+    return <div>Error: {query.error.message}</div>;
+  }
+
+  // If the Query is successful, you can access the data returned using the `UseQueryResult.data` field.
+  if (query.isSuccess) {
+    console.log(query.data.diaryEntries);
+  }
+  return <div>Query execution {query.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
 # Mutations
 
 The React generated SDK provides Mutations hook functions that call and return [`useDataConnectMutation`](https://react-query-firebase.invertase.dev/react/data-connect/mutations) hooks from TanStack Query Firebase.
@@ -868,6 +1134,312 @@ export default function ToggleTodoItemCompletedComponent() {
   // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
   if (mutation.isSuccess) {
     console.log(mutation.data.todoItem_update);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## CreateDiaryEntry
+You can execute the `CreateDiaryEntry` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts)):
+```javascript
+useCreateDiaryEntry(options?: useDataConnectMutationOptions<CreateDiaryEntryData, FirebaseError, CreateDiaryEntryVariables>): UseDataConnectMutationResult<CreateDiaryEntryData, CreateDiaryEntryVariables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useCreateDiaryEntry(dc: DataConnect, options?: useDataConnectMutationOptions<CreateDiaryEntryData, FirebaseError, CreateDiaryEntryVariables>): UseDataConnectMutationResult<CreateDiaryEntryData, CreateDiaryEntryVariables>;
+```
+
+### Variables
+The `CreateDiaryEntry` Mutation requires an argument of type `CreateDiaryEntryVariables`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface CreateDiaryEntryVariables {
+  title: string;
+  content: string;
+  mood: string;
+  image?: string | null;
+  caption?: string | null;
+  createdAt: TimestampString;
+  updatedAt: TimestampString;
+}
+```
+### Return Type
+Recall that calling the `CreateDiaryEntry` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `CreateDiaryEntry` Mutation is of type `CreateDiaryEntryData`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface CreateDiaryEntryData {
+  diaryEntry_insert: DiaryEntry_Key;
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `CreateDiaryEntry`'s Mutation hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, CreateDiaryEntryVariables } from '@dataconnect/generated';
+import { useCreateDiaryEntry } from '@dataconnect/generated/react'
+
+export default function CreateDiaryEntryComponent() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useCreateDiaryEntry();
+
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useCreateDiaryEntry(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useCreateDiaryEntry(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useCreateDiaryEntry(dataConnect, options);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useCreateDiaryEntry` Mutation requires an argument of type `CreateDiaryEntryVariables`:
+  const createDiaryEntryVars: CreateDiaryEntryVariables = {
+    title: ..., 
+    content: ..., 
+    mood: ..., 
+    image: ..., // optional
+    caption: ..., // optional
+    createdAt: ..., 
+    updatedAt: ..., 
+  };
+  mutation.mutate(createDiaryEntryVars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ title: ..., content: ..., mood: ..., image: ..., caption: ..., createdAt: ..., updatedAt: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(createDiaryEntryVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.diaryEntry_insert);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## UpdateDiaryEntry
+You can execute the `UpdateDiaryEntry` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts)):
+```javascript
+useUpdateDiaryEntry(options?: useDataConnectMutationOptions<UpdateDiaryEntryData, FirebaseError, UpdateDiaryEntryVariables>): UseDataConnectMutationResult<UpdateDiaryEntryData, UpdateDiaryEntryVariables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useUpdateDiaryEntry(dc: DataConnect, options?: useDataConnectMutationOptions<UpdateDiaryEntryData, FirebaseError, UpdateDiaryEntryVariables>): UseDataConnectMutationResult<UpdateDiaryEntryData, UpdateDiaryEntryVariables>;
+```
+
+### Variables
+The `UpdateDiaryEntry` Mutation requires an argument of type `UpdateDiaryEntryVariables`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface UpdateDiaryEntryVariables {
+  id: DiaryEntry_Key;
+  title?: string | null;
+  content?: string | null;
+  mood?: string | null;
+  image?: string | null;
+  caption?: string | null;
+  updatedAt?: TimestampString | null;
+}
+```
+### Return Type
+Recall that calling the `UpdateDiaryEntry` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `UpdateDiaryEntry` Mutation is of type `UpdateDiaryEntryData`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface UpdateDiaryEntryData {
+  diaryEntry_update?: DiaryEntry_Key | null;
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `UpdateDiaryEntry`'s Mutation hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, UpdateDiaryEntryVariables } from '@dataconnect/generated';
+import { useUpdateDiaryEntry } from '@dataconnect/generated/react'
+
+export default function UpdateDiaryEntryComponent() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useUpdateDiaryEntry();
+
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useUpdateDiaryEntry(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useUpdateDiaryEntry(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useUpdateDiaryEntry(dataConnect, options);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useUpdateDiaryEntry` Mutation requires an argument of type `UpdateDiaryEntryVariables`:
+  const updateDiaryEntryVars: UpdateDiaryEntryVariables = {
+    id: ..., 
+    title: ..., // optional
+    content: ..., // optional
+    mood: ..., // optional
+    image: ..., // optional
+    caption: ..., // optional
+    updatedAt: ..., // optional
+  };
+  mutation.mutate(updateDiaryEntryVars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ id: ..., title: ..., content: ..., mood: ..., image: ..., caption: ..., updatedAt: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(updateDiaryEntryVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.diaryEntry_update);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## DeleteDiaryEntry
+You can execute the `DeleteDiaryEntry` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts)):
+```javascript
+useDeleteDiaryEntry(options?: useDataConnectMutationOptions<DeleteDiaryEntryData, FirebaseError, DeleteDiaryEntryVariables>): UseDataConnectMutationResult<DeleteDiaryEntryData, DeleteDiaryEntryVariables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useDeleteDiaryEntry(dc: DataConnect, options?: useDataConnectMutationOptions<DeleteDiaryEntryData, FirebaseError, DeleteDiaryEntryVariables>): UseDataConnectMutationResult<DeleteDiaryEntryData, DeleteDiaryEntryVariables>;
+```
+
+### Variables
+The `DeleteDiaryEntry` Mutation requires an argument of type `DeleteDiaryEntryVariables`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface DeleteDiaryEntryVariables {
+  id: DiaryEntry_Key;
+}
+```
+### Return Type
+Recall that calling the `DeleteDiaryEntry` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `DeleteDiaryEntry` Mutation is of type `DeleteDiaryEntryData`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface DeleteDiaryEntryData {
+  diaryEntry_delete?: DiaryEntry_Key | null;
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `DeleteDiaryEntry`'s Mutation hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, DeleteDiaryEntryVariables } from '@dataconnect/generated';
+import { useDeleteDiaryEntry } from '@dataconnect/generated/react'
+
+export default function DeleteDiaryEntryComponent() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useDeleteDiaryEntry();
+
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useDeleteDiaryEntry(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useDeleteDiaryEntry(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useDeleteDiaryEntry(dataConnect, options);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useDeleteDiaryEntry` Mutation requires an argument of type `DeleteDiaryEntryVariables`:
+  const deleteDiaryEntryVars: DeleteDiaryEntryVariables = {
+    id: ..., 
+  };
+  mutation.mutate(deleteDiaryEntryVars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ id: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(deleteDiaryEntryVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.diaryEntry_delete);
   }
   return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
 }

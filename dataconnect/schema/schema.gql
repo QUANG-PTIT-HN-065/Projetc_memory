@@ -13,8 +13,8 @@ type DiaryEntry @table {
   mood: String!
   image: String
   caption: String
-  createdAt: Timestamp! @default(expr: "now()")
-  updatedAt: Timestamp! @default(expr: "now()")
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
 }
 
 enum PriorityLevel {
