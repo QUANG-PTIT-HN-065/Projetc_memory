@@ -12,7 +12,7 @@ For each operation, there is a wrapper hook that can be used to call the operati
 
 Here are all of the hooks that get generated:
 ```ts
-import { useCreateTodoItem, useUpdateTodoItem, useDeleteTodoItem, useToggleTodoItemCompleted, useListTodoItems, useGetTodoItem, useListTodoItemsByStatus, useListTodoItemsByPriority } from '@dataconnect/generated/react';
+import { useCreateTodoItem, useUpdateTodoItem, useDeleteTodoItem, useToggleTodoItemCompleted, useCreateDiaryEntry, useUpdateDiaryEntry, useDeleteDiaryEntry, useListTodoItems, useGetTodoItem, useListTodoItemsByStatus } from '@dataconnect/generated/react';
 // The types of these hooks are available in react/index.d.ts
 
 const { data, isPending, isSuccess, isError, error } = useCreateTodoItem(createTodoItemVars);
@@ -23,13 +23,17 @@ const { data, isPending, isSuccess, isError, error } = useDeleteTodoItem(deleteT
 
 const { data, isPending, isSuccess, isError, error } = useToggleTodoItemCompleted(toggleTodoItemCompletedVars);
 
+const { data, isPending, isSuccess, isError, error } = useCreateDiaryEntry(createDiaryEntryVars);
+
+const { data, isPending, isSuccess, isError, error } = useUpdateDiaryEntry(updateDiaryEntryVars);
+
+const { data, isPending, isSuccess, isError, error } = useDeleteDiaryEntry(deleteDiaryEntryVars);
+
 const { data, isPending, isSuccess, isError, error } = useListTodoItems();
 
 const { data, isPending, isSuccess, isError, error } = useGetTodoItem(getTodoItemVars);
 
 const { data, isPending, isSuccess, isError, error } = useListTodoItemsByStatus(listTodoItemsByStatusVars);
-
-const { data, isPending, isSuccess, isError, error } = useListTodoItemsByPriority(listTodoItemsByPriorityVars);
 
 ```
 
@@ -68,7 +72,7 @@ If a user is not using a supported framework, they can use the generated SDK dir
 Here's an example of how to use it with the first 5 operations:
 
 ```js
-import { createTodoItem, updateTodoItem, deleteTodoItem, toggleTodoItemCompleted, listTodoItems, getTodoItem, listTodoItemsByStatus, listTodoItemsByPriority } from '@dataconnect/generated';
+import { createTodoItem, updateTodoItem, deleteTodoItem, toggleTodoItemCompleted, createDiaryEntry, updateDiaryEntry, deleteDiaryEntry, listTodoItems, getTodoItem, listTodoItemsByStatus } from '@dataconnect/generated';
 
 
 // Operation CreateTodoItem:  For variables, look at type CreateTodoItemVars in ../index.d.ts
@@ -83,6 +87,15 @@ const { data } = await DeleteTodoItem(dataConnect, deleteTodoItemVars);
 // Operation ToggleTodoItemCompleted:  For variables, look at type ToggleTodoItemCompletedVars in ../index.d.ts
 const { data } = await ToggleTodoItemCompleted(dataConnect, toggleTodoItemCompletedVars);
 
+// Operation CreateDiaryEntry:  For variables, look at type CreateDiaryEntryVars in ../index.d.ts
+const { data } = await CreateDiaryEntry(dataConnect, createDiaryEntryVars);
+
+// Operation UpdateDiaryEntry:  For variables, look at type UpdateDiaryEntryVars in ../index.d.ts
+const { data } = await UpdateDiaryEntry(dataConnect, updateDiaryEntryVars);
+
+// Operation DeleteDiaryEntry:  For variables, look at type DeleteDiaryEntryVars in ../index.d.ts
+const { data } = await DeleteDiaryEntry(dataConnect, deleteDiaryEntryVars);
+
 // Operation ListTodoItems: 
 const { data } = await ListTodoItems(dataConnect);
 
@@ -91,9 +104,6 @@ const { data } = await GetTodoItem(dataConnect, getTodoItemVars);
 
 // Operation ListTodoItemsByStatus:  For variables, look at type ListTodoItemsByStatusVars in ../index.d.ts
 const { data } = await ListTodoItemsByStatus(dataConnect, listTodoItemsByStatusVars);
-
-// Operation ListTodoItemsByPriority:  For variables, look at type ListTodoItemsByPriorityVars in ../index.d.ts
-const { data } = await ListTodoItemsByPriority(dataConnect, listTodoItemsByPriorityVars);
 
 
 ```

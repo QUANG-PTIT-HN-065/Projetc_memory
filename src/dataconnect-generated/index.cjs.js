@@ -76,6 +76,48 @@ exports.toggleTodoItemCompleted = function toggleTodoItemCompleted(dcOrVars, var
 }
 ;
 
+const createDiaryEntryRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'CreateDiaryEntry', inputVars);
+}
+createDiaryEntryRef.operationName = 'CreateDiaryEntry';
+exports.createDiaryEntryRef = createDiaryEntryRef;
+
+exports.createDiaryEntry = function createDiaryEntry(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+  return executeMutation(createDiaryEntryRef(dcInstance, inputVars));
+}
+;
+
+const updateDiaryEntryRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'UpdateDiaryEntry', inputVars);
+}
+updateDiaryEntryRef.operationName = 'UpdateDiaryEntry';
+exports.updateDiaryEntryRef = updateDiaryEntryRef;
+
+exports.updateDiaryEntry = function updateDiaryEntry(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+  return executeMutation(updateDiaryEntryRef(dcInstance, inputVars));
+}
+;
+
+const deleteDiaryEntryRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'DeleteDiaryEntry', inputVars);
+}
+deleteDiaryEntryRef.operationName = 'DeleteDiaryEntry';
+exports.deleteDiaryEntryRef = deleteDiaryEntryRef;
+
+exports.deleteDiaryEntry = function deleteDiaryEntry(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+  return executeMutation(deleteDiaryEntryRef(dcInstance, inputVars));
+}
+;
+
 const listTodoItemsRef = (dc) => {
   const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
   dcInstance._useGeneratedSdk();
@@ -87,7 +129,7 @@ exports.listTodoItemsRef = listTodoItemsRef;
 exports.listTodoItems = function listTodoItems(dcOrOptions, options) {
   
   const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrOptions, options, undefined,false, false);
-  return executeQuery(listTodoItemsRef(dcInstance, inputVars), inputOpts && inputOpts.fetchPolicy);
+  return executeQuery(listTodoItemsRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
 }
 ;
 
@@ -102,7 +144,7 @@ exports.getTodoItemRef = getTodoItemRef;
 exports.getTodoItem = function getTodoItem(dcOrVars, varsOrOptions, options) {
   
   const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrVars, varsOrOptions, options, true, true);
-  return executeQuery(getTodoItemRef(dcInstance, inputVars), inputOpts && inputOpts.fetchPolicy);
+  return executeQuery(getTodoItemRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
 }
 ;
 
@@ -117,7 +159,7 @@ exports.listTodoItemsByStatusRef = listTodoItemsByStatusRef;
 exports.listTodoItemsByStatus = function listTodoItemsByStatus(dcOrVars, varsOrOptions, options) {
   
   const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrVars, varsOrOptions, options, true, true);
-  return executeQuery(listTodoItemsByStatusRef(dcInstance, inputVars), inputOpts && inputOpts.fetchPolicy);
+  return executeQuery(listTodoItemsByStatusRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
 }
 ;
 
@@ -132,6 +174,51 @@ exports.listTodoItemsByPriorityRef = listTodoItemsByPriorityRef;
 exports.listTodoItemsByPriority = function listTodoItemsByPriority(dcOrVars, varsOrOptions, options) {
   
   const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrVars, varsOrOptions, options, true, true);
-  return executeQuery(listTodoItemsByPriorityRef(dcInstance, inputVars), inputOpts && inputOpts.fetchPolicy);
+  return executeQuery(listTodoItemsByPriorityRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
+}
+;
+
+const listDiaryEntriesRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListDiaryEntries');
+}
+listDiaryEntriesRef.operationName = 'ListDiaryEntries';
+exports.listDiaryEntriesRef = listDiaryEntriesRef;
+
+exports.listDiaryEntries = function listDiaryEntries(dcOrOptions, options) {
+  
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrOptions, options, undefined,false, false);
+  return executeQuery(listDiaryEntriesRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
+}
+;
+
+const getDiaryEntryRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetDiaryEntry', inputVars);
+}
+getDiaryEntryRef.operationName = 'GetDiaryEntry';
+exports.getDiaryEntryRef = getDiaryEntryRef;
+
+exports.getDiaryEntry = function getDiaryEntry(dcOrVars, varsOrOptions, options) {
+  
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrVars, varsOrOptions, options, true, true);
+  return executeQuery(getDiaryEntryRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
+}
+;
+
+const searchDiaryEntriesByTitleRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'SearchDiaryEntriesByTitle', inputVars);
+}
+searchDiaryEntriesByTitleRef.operationName = 'SearchDiaryEntriesByTitle';
+exports.searchDiaryEntriesByTitleRef = searchDiaryEntriesByTitleRef;
+
+exports.searchDiaryEntriesByTitle = function searchDiaryEntriesByTitle(dcOrVars, varsOrOptions, options) {
+  
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrVars, varsOrOptions, options, true, true);
+  return executeQuery(searchDiaryEntriesByTitleRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
 }
 ;

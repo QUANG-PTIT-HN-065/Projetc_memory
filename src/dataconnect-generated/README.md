@@ -14,11 +14,17 @@ This README will guide you through the process of using the generated JavaScript
   - [*GetTodoItem*](#gettodoitem)
   - [*ListTodoItemsByStatus*](#listtodoitemsbystatus)
   - [*ListTodoItemsByPriority*](#listtodoitemsbypriority)
+  - [*ListDiaryEntries*](#listdiaryentries)
+  - [*GetDiaryEntry*](#getdiaryentry)
+  - [*SearchDiaryEntriesByTitle*](#searchdiaryentriesbytitle)
 - [**Mutations**](#mutations)
   - [*CreateTodoItem*](#createtodoitem)
   - [*UpdateTodoItem*](#updatetodoitem)
   - [*DeleteTodoItem*](#deletetodoitem)
   - [*ToggleTodoItemCompleted*](#toggletodoitemcompleted)
+  - [*CreateDiaryEntry*](#creatediaryentry)
+  - [*UpdateDiaryEntry*](#updatediaryentry)
+  - [*DeleteDiaryEntry*](#deletediaryentry)
 
 # Accessing the connector
 A connector is a collection of Queries and Mutations. One SDK is generated for each connector - this SDK is generated for the connector `example`. You can find more information about connectors in the [Data Connect documentation](https://firebase.google.com/docs/data-connect#how-does).
@@ -507,6 +513,342 @@ executeQuery(ref).then((response) => {
 });
 ```
 
+## ListDiaryEntries
+You can execute the `ListDiaryEntries` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+listDiaryEntries(options?: ExecuteQueryOptions): QueryPromise<ListDiaryEntriesData, undefined>;
+
+interface ListDiaryEntriesRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<ListDiaryEntriesData, undefined>;
+}
+export const listDiaryEntriesRef: ListDiaryEntriesRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```typescript
+listDiaryEntries(dc: DataConnect, options?: ExecuteQueryOptions): QueryPromise<ListDiaryEntriesData, undefined>;
+
+interface ListDiaryEntriesRef {
+  ...
+  (dc: DataConnect): QueryRef<ListDiaryEntriesData, undefined>;
+}
+export const listDiaryEntriesRef: ListDiaryEntriesRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the listDiaryEntriesRef:
+```typescript
+const name = listDiaryEntriesRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `ListDiaryEntries` query has no variables.
+### Return Type
+Recall that executing the `ListDiaryEntries` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `ListDiaryEntriesData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface ListDiaryEntriesData {
+  diaryEntries: ({
+    id: UUIDString;
+    title: string;
+    content: string;
+    mood: string;
+    image?: string | null;
+    caption?: string | null;
+    createdAt: TimestampString;
+    updatedAt: TimestampString;
+  } & DiaryEntry_Key)[];
+}
+```
+### Using `ListDiaryEntries`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, listDiaryEntries } from '@dataconnect/generated';
+
+
+// Call the `listDiaryEntries()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await listDiaryEntries();
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await listDiaryEntries(dataConnect);
+
+console.log(data.diaryEntries);
+
+// Or, you can use the `Promise` API.
+listDiaryEntries().then((response) => {
+  const data = response.data;
+  console.log(data.diaryEntries);
+});
+```
+
+### Using `ListDiaryEntries`'s `QueryRef` function
+
+```typescript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, listDiaryEntriesRef } from '@dataconnect/generated';
+
+
+// Call the `listDiaryEntriesRef()` function to get a reference to the query.
+const ref = listDiaryEntriesRef();
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = listDiaryEntriesRef(dataConnect);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.diaryEntries);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.diaryEntries);
+});
+```
+
+## GetDiaryEntry
+You can execute the `GetDiaryEntry` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+getDiaryEntry(vars: GetDiaryEntryVariables, options?: ExecuteQueryOptions): QueryPromise<GetDiaryEntryData, GetDiaryEntryVariables>;
+
+interface GetDiaryEntryRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: GetDiaryEntryVariables): QueryRef<GetDiaryEntryData, GetDiaryEntryVariables>;
+}
+export const getDiaryEntryRef: GetDiaryEntryRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```typescript
+getDiaryEntry(dc: DataConnect, vars: GetDiaryEntryVariables, options?: ExecuteQueryOptions): QueryPromise<GetDiaryEntryData, GetDiaryEntryVariables>;
+
+interface GetDiaryEntryRef {
+  ...
+  (dc: DataConnect, vars: GetDiaryEntryVariables): QueryRef<GetDiaryEntryData, GetDiaryEntryVariables>;
+}
+export const getDiaryEntryRef: GetDiaryEntryRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the getDiaryEntryRef:
+```typescript
+const name = getDiaryEntryRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `GetDiaryEntry` query requires an argument of type `GetDiaryEntryVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface GetDiaryEntryVariables {
+  id: DiaryEntry_Key;
+}
+```
+### Return Type
+Recall that executing the `GetDiaryEntry` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `GetDiaryEntryData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface GetDiaryEntryData {
+  diaryEntry?: {
+    id: UUIDString;
+    title: string;
+    content: string;
+    mood: string;
+    image?: string | null;
+    caption?: string | null;
+    createdAt: TimestampString;
+    updatedAt: TimestampString;
+  } & DiaryEntry_Key;
+}
+```
+### Using `GetDiaryEntry`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, getDiaryEntry, GetDiaryEntryVariables } from '@dataconnect/generated';
+
+// The `GetDiaryEntry` query requires an argument of type `GetDiaryEntryVariables`:
+const getDiaryEntryVars: GetDiaryEntryVariables = {
+  id: ..., 
+};
+
+// Call the `getDiaryEntry()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await getDiaryEntry(getDiaryEntryVars);
+// Variables can be defined inline as well.
+const { data } = await getDiaryEntry({ id: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await getDiaryEntry(dataConnect, getDiaryEntryVars);
+
+console.log(data.diaryEntry);
+
+// Or, you can use the `Promise` API.
+getDiaryEntry(getDiaryEntryVars).then((response) => {
+  const data = response.data;
+  console.log(data.diaryEntry);
+});
+```
+
+### Using `GetDiaryEntry`'s `QueryRef` function
+
+```typescript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, getDiaryEntryRef, GetDiaryEntryVariables } from '@dataconnect/generated';
+
+// The `GetDiaryEntry` query requires an argument of type `GetDiaryEntryVariables`:
+const getDiaryEntryVars: GetDiaryEntryVariables = {
+  id: ..., 
+};
+
+// Call the `getDiaryEntryRef()` function to get a reference to the query.
+const ref = getDiaryEntryRef(getDiaryEntryVars);
+// Variables can be defined inline as well.
+const ref = getDiaryEntryRef({ id: ..., });
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = getDiaryEntryRef(dataConnect, getDiaryEntryVars);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.diaryEntry);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.diaryEntry);
+});
+```
+
+## SearchDiaryEntriesByTitle
+You can execute the `SearchDiaryEntriesByTitle` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+searchDiaryEntriesByTitle(vars: SearchDiaryEntriesByTitleVariables, options?: ExecuteQueryOptions): QueryPromise<SearchDiaryEntriesByTitleData, SearchDiaryEntriesByTitleVariables>;
+
+interface SearchDiaryEntriesByTitleRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: SearchDiaryEntriesByTitleVariables): QueryRef<SearchDiaryEntriesByTitleData, SearchDiaryEntriesByTitleVariables>;
+}
+export const searchDiaryEntriesByTitleRef: SearchDiaryEntriesByTitleRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```typescript
+searchDiaryEntriesByTitle(dc: DataConnect, vars: SearchDiaryEntriesByTitleVariables, options?: ExecuteQueryOptions): QueryPromise<SearchDiaryEntriesByTitleData, SearchDiaryEntriesByTitleVariables>;
+
+interface SearchDiaryEntriesByTitleRef {
+  ...
+  (dc: DataConnect, vars: SearchDiaryEntriesByTitleVariables): QueryRef<SearchDiaryEntriesByTitleData, SearchDiaryEntriesByTitleVariables>;
+}
+export const searchDiaryEntriesByTitleRef: SearchDiaryEntriesByTitleRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the searchDiaryEntriesByTitleRef:
+```typescript
+const name = searchDiaryEntriesByTitleRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `SearchDiaryEntriesByTitle` query requires an argument of type `SearchDiaryEntriesByTitleVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface SearchDiaryEntriesByTitleVariables {
+  title: string;
+}
+```
+### Return Type
+Recall that executing the `SearchDiaryEntriesByTitle` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `SearchDiaryEntriesByTitleData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface SearchDiaryEntriesByTitleData {
+  diaryEntries: ({
+    id: UUIDString;
+    title: string;
+    content: string;
+    mood: string;
+    image?: string | null;
+    caption?: string | null;
+    createdAt: TimestampString;
+    updatedAt: TimestampString;
+  } & DiaryEntry_Key)[];
+}
+```
+### Using `SearchDiaryEntriesByTitle`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, searchDiaryEntriesByTitle, SearchDiaryEntriesByTitleVariables } from '@dataconnect/generated';
+
+// The `SearchDiaryEntriesByTitle` query requires an argument of type `SearchDiaryEntriesByTitleVariables`:
+const searchDiaryEntriesByTitleVars: SearchDiaryEntriesByTitleVariables = {
+  title: ..., 
+};
+
+// Call the `searchDiaryEntriesByTitle()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await searchDiaryEntriesByTitle(searchDiaryEntriesByTitleVars);
+// Variables can be defined inline as well.
+const { data } = await searchDiaryEntriesByTitle({ title: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await searchDiaryEntriesByTitle(dataConnect, searchDiaryEntriesByTitleVars);
+
+console.log(data.diaryEntries);
+
+// Or, you can use the `Promise` API.
+searchDiaryEntriesByTitle(searchDiaryEntriesByTitleVars).then((response) => {
+  const data = response.data;
+  console.log(data.diaryEntries);
+});
+```
+
+### Using `SearchDiaryEntriesByTitle`'s `QueryRef` function
+
+```typescript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, searchDiaryEntriesByTitleRef, SearchDiaryEntriesByTitleVariables } from '@dataconnect/generated';
+
+// The `SearchDiaryEntriesByTitle` query requires an argument of type `SearchDiaryEntriesByTitleVariables`:
+const searchDiaryEntriesByTitleVars: SearchDiaryEntriesByTitleVariables = {
+  title: ..., 
+};
+
+// Call the `searchDiaryEntriesByTitleRef()` function to get a reference to the query.
+const ref = searchDiaryEntriesByTitleRef(searchDiaryEntriesByTitleVars);
+// Variables can be defined inline as well.
+const ref = searchDiaryEntriesByTitleRef({ title: ..., });
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = searchDiaryEntriesByTitleRef(dataConnect, searchDiaryEntriesByTitleVars);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.diaryEntries);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.diaryEntries);
+});
+```
+
 # Mutations
 
 There are two ways to execute a Data Connect Mutation using the generated Web SDK:
@@ -979,6 +1321,369 @@ console.log(data.todoItem_update);
 executeMutation(ref).then((response) => {
   const data = response.data;
   console.log(data.todoItem_update);
+});
+```
+
+## CreateDiaryEntry
+You can execute the `CreateDiaryEntry` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+createDiaryEntry(vars: CreateDiaryEntryVariables): MutationPromise<CreateDiaryEntryData, CreateDiaryEntryVariables>;
+
+interface CreateDiaryEntryRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateDiaryEntryVariables): MutationRef<CreateDiaryEntryData, CreateDiaryEntryVariables>;
+}
+export const createDiaryEntryRef: CreateDiaryEntryRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+createDiaryEntry(dc: DataConnect, vars: CreateDiaryEntryVariables): MutationPromise<CreateDiaryEntryData, CreateDiaryEntryVariables>;
+
+interface CreateDiaryEntryRef {
+  ...
+  (dc: DataConnect, vars: CreateDiaryEntryVariables): MutationRef<CreateDiaryEntryData, CreateDiaryEntryVariables>;
+}
+export const createDiaryEntryRef: CreateDiaryEntryRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the createDiaryEntryRef:
+```typescript
+const name = createDiaryEntryRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `CreateDiaryEntry` mutation requires an argument of type `CreateDiaryEntryVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface CreateDiaryEntryVariables {
+  title: string;
+  content: string;
+  mood: string;
+  image?: string | null;
+  caption?: string | null;
+  createdAt: TimestampString;
+  updatedAt: TimestampString;
+}
+```
+### Return Type
+Recall that executing the `CreateDiaryEntry` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `CreateDiaryEntryData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface CreateDiaryEntryData {
+  diaryEntry_insert: DiaryEntry_Key;
+}
+```
+### Using `CreateDiaryEntry`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, createDiaryEntry, CreateDiaryEntryVariables } from '@dataconnect/generated';
+
+// The `CreateDiaryEntry` mutation requires an argument of type `CreateDiaryEntryVariables`:
+const createDiaryEntryVars: CreateDiaryEntryVariables = {
+  title: ..., 
+  content: ..., 
+  mood: ..., 
+  image: ..., // optional
+  caption: ..., // optional
+  createdAt: ..., 
+  updatedAt: ..., 
+};
+
+// Call the `createDiaryEntry()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await createDiaryEntry(createDiaryEntryVars);
+// Variables can be defined inline as well.
+const { data } = await createDiaryEntry({ title: ..., content: ..., mood: ..., image: ..., caption: ..., createdAt: ..., updatedAt: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await createDiaryEntry(dataConnect, createDiaryEntryVars);
+
+console.log(data.diaryEntry_insert);
+
+// Or, you can use the `Promise` API.
+createDiaryEntry(createDiaryEntryVars).then((response) => {
+  const data = response.data;
+  console.log(data.diaryEntry_insert);
+});
+```
+
+### Using `CreateDiaryEntry`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, createDiaryEntryRef, CreateDiaryEntryVariables } from '@dataconnect/generated';
+
+// The `CreateDiaryEntry` mutation requires an argument of type `CreateDiaryEntryVariables`:
+const createDiaryEntryVars: CreateDiaryEntryVariables = {
+  title: ..., 
+  content: ..., 
+  mood: ..., 
+  image: ..., // optional
+  caption: ..., // optional
+  createdAt: ..., 
+  updatedAt: ..., 
+};
+
+// Call the `createDiaryEntryRef()` function to get a reference to the mutation.
+const ref = createDiaryEntryRef(createDiaryEntryVars);
+// Variables can be defined inline as well.
+const ref = createDiaryEntryRef({ title: ..., content: ..., mood: ..., image: ..., caption: ..., createdAt: ..., updatedAt: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = createDiaryEntryRef(dataConnect, createDiaryEntryVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.diaryEntry_insert);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.diaryEntry_insert);
+});
+```
+
+## UpdateDiaryEntry
+You can execute the `UpdateDiaryEntry` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+updateDiaryEntry(vars: UpdateDiaryEntryVariables): MutationPromise<UpdateDiaryEntryData, UpdateDiaryEntryVariables>;
+
+interface UpdateDiaryEntryRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UpdateDiaryEntryVariables): MutationRef<UpdateDiaryEntryData, UpdateDiaryEntryVariables>;
+}
+export const updateDiaryEntryRef: UpdateDiaryEntryRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+updateDiaryEntry(dc: DataConnect, vars: UpdateDiaryEntryVariables): MutationPromise<UpdateDiaryEntryData, UpdateDiaryEntryVariables>;
+
+interface UpdateDiaryEntryRef {
+  ...
+  (dc: DataConnect, vars: UpdateDiaryEntryVariables): MutationRef<UpdateDiaryEntryData, UpdateDiaryEntryVariables>;
+}
+export const updateDiaryEntryRef: UpdateDiaryEntryRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the updateDiaryEntryRef:
+```typescript
+const name = updateDiaryEntryRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `UpdateDiaryEntry` mutation requires an argument of type `UpdateDiaryEntryVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface UpdateDiaryEntryVariables {
+  id: DiaryEntry_Key;
+  title?: string | null;
+  content?: string | null;
+  mood?: string | null;
+  image?: string | null;
+  caption?: string | null;
+  updatedAt?: TimestampString | null;
+}
+```
+### Return Type
+Recall that executing the `UpdateDiaryEntry` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `UpdateDiaryEntryData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface UpdateDiaryEntryData {
+  diaryEntry_update?: DiaryEntry_Key | null;
+}
+```
+### Using `UpdateDiaryEntry`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, updateDiaryEntry, UpdateDiaryEntryVariables } from '@dataconnect/generated';
+
+// The `UpdateDiaryEntry` mutation requires an argument of type `UpdateDiaryEntryVariables`:
+const updateDiaryEntryVars: UpdateDiaryEntryVariables = {
+  id: ..., 
+  title: ..., // optional
+  content: ..., // optional
+  mood: ..., // optional
+  image: ..., // optional
+  caption: ..., // optional
+  updatedAt: ..., // optional
+};
+
+// Call the `updateDiaryEntry()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await updateDiaryEntry(updateDiaryEntryVars);
+// Variables can be defined inline as well.
+const { data } = await updateDiaryEntry({ id: ..., title: ..., content: ..., mood: ..., image: ..., caption: ..., updatedAt: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await updateDiaryEntry(dataConnect, updateDiaryEntryVars);
+
+console.log(data.diaryEntry_update);
+
+// Or, you can use the `Promise` API.
+updateDiaryEntry(updateDiaryEntryVars).then((response) => {
+  const data = response.data;
+  console.log(data.diaryEntry_update);
+});
+```
+
+### Using `UpdateDiaryEntry`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, updateDiaryEntryRef, UpdateDiaryEntryVariables } from '@dataconnect/generated';
+
+// The `UpdateDiaryEntry` mutation requires an argument of type `UpdateDiaryEntryVariables`:
+const updateDiaryEntryVars: UpdateDiaryEntryVariables = {
+  id: ..., 
+  title: ..., // optional
+  content: ..., // optional
+  mood: ..., // optional
+  image: ..., // optional
+  caption: ..., // optional
+  updatedAt: ..., // optional
+};
+
+// Call the `updateDiaryEntryRef()` function to get a reference to the mutation.
+const ref = updateDiaryEntryRef(updateDiaryEntryVars);
+// Variables can be defined inline as well.
+const ref = updateDiaryEntryRef({ id: ..., title: ..., content: ..., mood: ..., image: ..., caption: ..., updatedAt: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = updateDiaryEntryRef(dataConnect, updateDiaryEntryVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.diaryEntry_update);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.diaryEntry_update);
+});
+```
+
+## DeleteDiaryEntry
+You can execute the `DeleteDiaryEntry` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+deleteDiaryEntry(vars: DeleteDiaryEntryVariables): MutationPromise<DeleteDiaryEntryData, DeleteDiaryEntryVariables>;
+
+interface DeleteDiaryEntryRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: DeleteDiaryEntryVariables): MutationRef<DeleteDiaryEntryData, DeleteDiaryEntryVariables>;
+}
+export const deleteDiaryEntryRef: DeleteDiaryEntryRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+deleteDiaryEntry(dc: DataConnect, vars: DeleteDiaryEntryVariables): MutationPromise<DeleteDiaryEntryData, DeleteDiaryEntryVariables>;
+
+interface DeleteDiaryEntryRef {
+  ...
+  (dc: DataConnect, vars: DeleteDiaryEntryVariables): MutationRef<DeleteDiaryEntryData, DeleteDiaryEntryVariables>;
+}
+export const deleteDiaryEntryRef: DeleteDiaryEntryRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the deleteDiaryEntryRef:
+```typescript
+const name = deleteDiaryEntryRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `DeleteDiaryEntry` mutation requires an argument of type `DeleteDiaryEntryVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface DeleteDiaryEntryVariables {
+  id: DiaryEntry_Key;
+}
+```
+### Return Type
+Recall that executing the `DeleteDiaryEntry` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `DeleteDiaryEntryData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface DeleteDiaryEntryData {
+  diaryEntry_delete?: DiaryEntry_Key | null;
+}
+```
+### Using `DeleteDiaryEntry`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, deleteDiaryEntry, DeleteDiaryEntryVariables } from '@dataconnect/generated';
+
+// The `DeleteDiaryEntry` mutation requires an argument of type `DeleteDiaryEntryVariables`:
+const deleteDiaryEntryVars: DeleteDiaryEntryVariables = {
+  id: ..., 
+};
+
+// Call the `deleteDiaryEntry()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await deleteDiaryEntry(deleteDiaryEntryVars);
+// Variables can be defined inline as well.
+const { data } = await deleteDiaryEntry({ id: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await deleteDiaryEntry(dataConnect, deleteDiaryEntryVars);
+
+console.log(data.diaryEntry_delete);
+
+// Or, you can use the `Promise` API.
+deleteDiaryEntry(deleteDiaryEntryVars).then((response) => {
+  const data = response.data;
+  console.log(data.diaryEntry_delete);
+});
+```
+
+### Using `DeleteDiaryEntry`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, deleteDiaryEntryRef, DeleteDiaryEntryVariables } from '@dataconnect/generated';
+
+// The `DeleteDiaryEntry` mutation requires an argument of type `DeleteDiaryEntryVariables`:
+const deleteDiaryEntryVars: DeleteDiaryEntryVariables = {
+  id: ..., 
+};
+
+// Call the `deleteDiaryEntryRef()` function to get a reference to the mutation.
+const ref = deleteDiaryEntryRef(deleteDiaryEntryVars);
+// Variables can be defined inline as well.
+const ref = deleteDiaryEntryRef({ id: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = deleteDiaryEntryRef(dataConnect, deleteDiaryEntryVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.diaryEntry_delete);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.diaryEntry_delete);
 });
 ```
 

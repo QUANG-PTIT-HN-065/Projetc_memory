@@ -87,7 +87,7 @@ export default function ToDoList() {
 
         // Thêm item mới vào local state ngay lập tức (không cần fetch lại)
         const newTodo: TodoItem = {
-          id: response.data?.id || `temp-${Date.now()}`, // Nếu API trả về ID, dùng nó, nếu không dùng temp ID
+          id: response.data?.todoItem_insert?.id || `temp-${Date.now()}`, // Nếu API trả về ID, dùng nó, nếu không dùng temp ID
           text: values.text,
           completed: false,
           priority: values.priority,

@@ -134,6 +134,7 @@ export default function Spread({ entry, pageNum, addMode, newEntry, setNewEntry,
                   const url = await uploadImage(f);
                   setImgFile(url); // ghi đè bằng URL thật
                 } catch {
+                  setImgFile("");
                   alert("Upload ảnh thất bại, vui lòng thử lại.");
                 } finally {
                   setUploading(false);
@@ -303,13 +304,14 @@ export default function Spread({ entry, pageNum, addMode, newEntry, setNewEntry,
             <div style={{ display: "flex", gap: "0.5rem", flexShrink: 0 }}>
               <button
                 onClick={onSave}
+                disabled={uploading}
                 style={{
-                  background: "#f0c000",
+                  background: uploading ? "rgba(240,192,0,0.45)" : "#f0c000",
                   color: "#3a2800",
                   border: "none",
                   padding: "0.4rem 1rem",
                   borderRadius: 4,
-                  cursor: "pointer",
+                  cursor: uploading ? "not-allowed" : "pointer",
                   fontFamily: "inherit",
                   fontStyle: "italic",
                   fontSize: "0.8rem",

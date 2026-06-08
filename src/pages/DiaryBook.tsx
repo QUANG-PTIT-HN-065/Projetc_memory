@@ -6,7 +6,8 @@ import NavBtn from "./components/Diary/NavBtn";
 import ActionBtn from "./components/Diary/ActionBtn";
 import DeleteConfirmPopup from "./components/Diary/DeleteConfirmPopup";
 import { dataConnect } from "../firebase";
-import { createTodoItem, updateTodoItem, deleteTodoItem, listTodoItems, PriorityLevel } from "../dataconnect-generated";
+import { createDiaryEntry, updateDiaryEntry, deleteDiaryEntry, listDiaryEntries } from "../dataconnect-generated";
+import { formatDateVN } from "../utils/dateHelper";
 
 /* ─── SUNBURST BACKGROUND DOTS ─── */
 const SUN_DOTS = Array.from({ length: 12 }, (_, i) => ({
@@ -57,7 +58,7 @@ const ENTRIES: DiaryEntry[] = [
     mood: "🍋",
     content:
       "Lần đầu tiên tôi tự tay làm bánh flan. Mất hai tiếng đồng hồ, tràn caramel ra ngoài, nhưng khi lật ngược ra và nghe tiếng 'pop' nhỏ — tim tôi vui hơn bất kỳ thứ gì.\n\nBánh không hoàn hảo, hơi rỗ và màu caramel hơi đậm. Nhưng khi chia cho hàng xóm, bà Lan bảo: Ngon lắm con ơi.",
-    image: "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=600&q=80",
+    image: "https://res.cloudinary.com/dx212mtbe/image/upload/v1780887626/qxmz94m3vuyfgqn5ibn8.jpg",
     caption: "Buổi chiều làm bánh",
   },
   {
@@ -101,12 +102,11 @@ export default function DiaryBook() {
   };
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-
   const deleteEntry = async () => {
     const current = entries[page];
     if (current?.id) {
       try {
-        await deleteTodoItem(dataConnect, { id: { id: current.id } });
+        await deleteDiaryEntry(dataConnect, { id: { id: current.id } });
         setDbStatus("Xóa ghi chú trên server thành công.");
       } catch (error) {
         console.error("Xóa remote thất bại:", error);
@@ -120,18 +120,23 @@ export default function DiaryBook() {
     setShowDeleteConfirm(false);
   };
 
-  const mapTodoItemToEntry = (item: { id: string; text: string; priority?: string | null }) => {
-    const [titleLine, ...restContent] = item.text.split("\n\n");
-    const priorityMood = item.priority === "high" ? "🔥" : item.priority === "low" ? "🌿" : "🌼";
-
+  const mapDiaryItemToEntry = (item: {
+    id: string;
+    title: string;
+    content: string;
+    mood: string;
+    image?: string | null;
+    caption?: string | null;
+    createdAt: string;
+  }) => {
     return {
       id: item.id,
-      date: "✨ Lưu trên Cloud",
-      title: titleLine || "Ghi chú mới",
-      mood: priorityMood,
-      content: restContent.length > 0 ? restContent.join("\n\n") : item.text,
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80",
-      caption: item.priority ? `Ưu tiên: ${item.priority}` : "Từ DataConnect",
+      date: formatDateVN(new Date(item.createdAt)),
+      title: item.title || "Ghi chú mới",
+      mood: item.mood || "🌼",
+      content: item.content,
+      image: item.image || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80",
+      caption: item.caption || "Từ DataConnect",
     } as DiaryEntry;
   };
 
@@ -140,14 +145,14 @@ export default function DiaryBook() {
 
     const loadRemoteEntries = async () => {
       try {
-        const result = await listTodoItems(dataConnect);
-        const remote = result.data?.todoItems?.map(mapTodoItemToEntry) ?? [];
+        const result = await listDiaryEntries(dataConnect);
+        const remote = result.data?.diaryEntries?.map(mapDiaryItemToEntry) ?? [];
         setEntries((current) => {
           const existingIds = new Set(current.filter((entry) => entry.id).map((entry) => entry.id));
           const newRemote = remote.filter((item) => item.id && !existingIds.has(item.id));
           return [...current, ...newRemote];
         });
-        setDbStatus("Đã tải ghi chú từ DataConnect.");
+        setDbStatus("Đã tải nhật ký từ DataConnect.");
       } catch (error) {
         console.error("Không tải được ghi chú DataConnect:", error);
         setDbStatus("Không kết nối được DataConnect.");
@@ -190,9 +195,14 @@ export default function DiaryBook() {
 
   const saveEntry = async () => {
     if (!newEntry.title || !newEntry.content) return;
-    const days = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
-    const d = new Date();
-    const dateStr = `${days[d.getDay()]} · ${d.getDate()} tháng ${d.getMonth() + 1}, ${d.getFullYear()}`;
+    if (imgFile.startsWith("data:image/")) {
+      setDbStatus("Ảnh đang tải lên Cloudinary, đợi URL xong rồi lưu nhé.");
+      return;
+    }
+
+    const now = new Date();
+    const nowIso = now.toISOString();
+    const dateStr = formatDateVN(now);
     const entryData = {
       date: dateStr,
       title: newEntry.title,
@@ -215,11 +225,14 @@ export default function DiaryBook() {
 
       if (existing?.id) {
         try {
-          await updateTodoItem(dataConnect, {
+          await updateDiaryEntry(dataConnect, {
             id: { id: existing.id },
-            text: `${entryData.title}\n\n${entryData.content}`,
-            completed: false,
-            priority: PriorityLevel.medium,
+            title: entryData.title,
+            content: entryData.content,
+            mood: entryData.mood,
+            image: entryData.image,
+            caption: entryData.caption,
+            updatedAt: nowIso,
           });
           setDbStatus("Cập nhật ghi chú trên server thành công.");
         } catch (error) {
@@ -231,7 +244,6 @@ export default function DiaryBook() {
       return;
     }
 
-    const remoteText = `${entryData.title}\n\n${entryData.content}`;
     const updated = [...entries, entryData];
     setEntries(updated);
     setNewEntry({ title: "", content: "", mood: "🌻", caption: "" });
@@ -240,12 +252,16 @@ export default function DiaryBook() {
     setPage(updated.length - 1);
 
     try {
-      const result = await createTodoItem(dataConnect, {
-        text: remoteText,
-        completed: false,
-        priority: PriorityLevel.medium,
+      const result = await createDiaryEntry(dataConnect, {
+        title: entryData.title,
+        content: entryData.content,
+        mood: entryData.mood,
+        image: entryData.image,
+        caption: entryData.caption,
+        createdAt: nowIso,
+        updatedAt: nowIso,
       });
-      const remoteId = result.data?.todoItem_insert?.id;
+      const remoteId = result.data?.diaryEntry_insert?.id;
       if (remoteId) {
         setEntries((current) => {
           const copy = [...current];
